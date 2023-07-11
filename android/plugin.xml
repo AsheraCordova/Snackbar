@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="com.ashera.snackbar"
+        version="1.0">
+
+  <name>CordovaSnackbar</name>
+
+  <engines>
+    <engine name="cordova" version=">=3.4.0"/>
+  </engines>
+  
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="CordovaSnackbar">
+        <param name="android-package" value="com.ashera.snackbar.CordovaSnackbar"/>
+        <param name="onload" value="true" />
+      </feature>
+    </config-file>
+
+   	 <!-- start src -->
+     <source-file src="src/com/ashera/snackbar/CordovaSnackbarPlugin.java" target-dir="src/com/ashera/snackbar"/>
+     <source-file src="src/com/ashera/snackbar/Snackbar.java" target-dir="src/com/ashera/snackbar"/>
+     <source-file src="src/com/ashera/snackbar/SnackbarImpl.java" target-dir="src/com/ashera/snackbar"/>
+     <source-file src="src/com/ashera/snackbar/SnackbarPlugin.java" target-dir="src/com/ashera/snackbar"/>
+     <!-- src end -->
+     <!-- start res -->
+     <source-file src="res/layout/my_design_layout_snackbar.xml" target-dir="res/layout"/>
+     <!-- res end -->
+     <!-- start tsc -->
+     <source-file src="tsc/src/android/widget/SnackbarImpl.ts" target-dir="tsc/src/android/widget"/>
+     <!-- tsc end -->
+  </platform>
+
+
+</plugin>

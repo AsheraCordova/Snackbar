@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
+        id="com.ashera.snackbar"
+        version="1.0">
+
+  <name>CordovaSnackbar</name>
+
+  <engines>
+    <engine name="cordova" version=">=3.4.0"/>
+  </engines>
+  
+  <platform name="android">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="CordovaSnackbar">
+        <param name="android-package" value="com.ashera.snackbar.CordovaSnackbar"/>
+        <param name="onload" value="true" />
+      </feature>
+    </config-file>
+
+   	 <!-- start src -->
+     <source-file src="android/src/com/ashera/snackbar/CordovaSnackbarPlugin.java" target-dir="src/com/ashera/snackbar"/>
+     <source-file src="android/src/com/ashera/snackbar/Snackbar.java" target-dir="src/com/ashera/snackbar"/>
+     <source-file src="android/src/com/ashera/snackbar/SnackbarImpl.java" target-dir="src/com/ashera/snackbar"/>
+     <source-file src="android/src/com/ashera/snackbar/SnackbarPlugin.java" target-dir="src/com/ashera/snackbar"/>
+     <!-- src end -->
+     <!-- start res -->
+     <source-file src="android/res/layout/my_design_layout_snackbar.xml" target-dir="res/layout"/>
+     <!-- res end -->
+     <!-- start tsc -->
+     <source-file src="android/tsc/src/android/widget/SnackbarImpl.ts" target-dir="tsc/src/android/widget"/>
+     <!-- tsc end -->
+  </platform>
+  <platform name="ios">
+    <config-file target="config.xml" parent="/widget">
+      <feature name="com.ashera.snackbar.ios">
+        	<param name="ios-package" value="CordovaSnackbarPlugin" />
+         	<param name="onload" value="true" />
+      </feature>
+    </config-file>
+
+   	 <!-- start ios -->
+     <header-file src="ios/ios/src/CordovaSnackbarPlugin.h" target-dir="Snackbar/ios/src"/>
+     <source-file src="ios/ios/src/CordovaSnackbarPlugin.m" target-dir="Snackbar/ios/src" compiler-flags="-fobjc-arc-exceptions"/>
+     <header-file src="ios/ios/src/SnackbarContentLayoutImpl.h" target-dir="Snackbar/ios/src"/>
+     <source-file src="ios/ios/src/SnackbarContentLayoutImpl.m" target-dir="Snackbar/ios/src" compiler-flags="-fobjc-arc-exceptions"/>
+     <header-file src="ios/ios/src/SnackbarImpl.h" target-dir="Snackbar/ios/src"/>
+     <source-file src="ios/ios/src/SnackbarImpl.m" target-dir="Snackbar/ios/src" compiler-flags="-fobjc-arc-exceptions"/>
+     <header-file src="ios/ios/src/SnackbarLayoutImpl.h" target-dir="Snackbar/ios/src"/>
+     <source-file src="ios/ios/src/SnackbarLayoutImpl.m" target-dir="Snackbar/ios/src" compiler-flags="-fobjc-arc-exceptions"/>
+     <header-file src="ios/ios/src/SnackbarPlugin.h" target-dir="Snackbar/ios/src"/>
+     <source-file src="ios/ios/src/SnackbarPlugin.m" target-dir="Snackbar/ios/src" compiler-flags="-fobjc-arc-exceptions"/>
+     <!-- ios end -->
+     <!-- start AndroidJSnackbar -->
+     <header-file src="ios/library/AndroidJSnackbar/src/BaseTransientBottomBar.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
+     <source-file src="ios/library/AndroidJSnackbar/src/BaseTransientBottomBar.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
+     <header-file src="ios/library/AndroidJSnackbar/src/Snackbar.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
+     <source-file src="ios/library/AndroidJSnackbar/src/Snackbar.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
+     <header-file src="ios/library/AndroidJSnackbar/src/SnackbarContentLayout.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
+     <source-file src="ios/library/AndroidJSnackbar/src/SnackbarContentLayout.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
+     <header-file src="ios/library/AndroidJSnackbar/src/SnackbarManager.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
+     <source-file src="ios/library/AndroidJSnackbar/src/SnackbarManager.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
+     <!-- AndroidJSnackbar end -->
+     <!-- start tsc -->
+     <source-file src="ios/tsc/src/ios/widget/SnackbarContentLayoutImpl.ts" target-dir="tsc/src/ios/widget"/>
+     <source-file src="ios/tsc/src/ios/widget/SnackbarImpl.ts" target-dir="tsc/src/ios/widget"/>
+     <source-file src="ios/tsc/src/ios/widget/SnackbarLayoutImpl.ts" target-dir="tsc/src/ios/widget"/>
+     <!-- tsc end -->
+  </platform>
+  <platform name="browser">
+    <config-file target="config.xml" parent="/*">
+      <feature name="CordovaSnackbar">
+        <param name="android-package" value="com.ashera.snackbar.CordovaSnackbar"/>
+        <param name="onload" value="true" />
+      </feature>
+      <framework src="browser/core.gradle" custom="true" type="gradleReference" />
+    </config-file>
+
+   	 <!-- start src -->
+     <!-- src end -->
+     <!-- start res -->
+     <!-- res end -->
+     <!-- start tsc -->
+     <!-- tsc end -->
+  </platform>
+  <platform name="swt">
+    <config-file target="res/xml/config.xml" parent="/*">
+      <feature name="CordovaSnackbar">
+        <param name="android-package" value="com.ashera.snackbar.CordovaSnackbar"/>
+        <param name="onload" value="true" />
+      </feature>
+      <framework src="swt/core.gradle" custom="true" type="gradleReference" />
+    </config-file>
+
+   	 <!-- start src -->
+     <!-- src end -->
+     <!-- start res -->
+     <!-- res end -->
+     <!-- start tsc -->
+     <!-- tsc end -->
+  </platform>
+
+
+
+
+
+</plugin>
