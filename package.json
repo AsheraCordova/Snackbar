@@ -1,5 +1,5 @@
 {
-  "name": "${androidpackagename}",
+  "name": "com.ashera.snackbar",
   "version": "1.0.0",
   "description": "Snackbar Plugin",
   "author": "Ashera",
