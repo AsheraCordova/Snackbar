@@ -14,6 +14,6 @@ dependencies {
 	def project_version = '1.0.0';
 	
 	implementation "com.ashera:AndroidJSnackbar:${project_version}"
-	implementation "com.ashera:SWTSackbarPlugin:${project_version}"
+	implementation "com.ashera:SWTSnackbarPlugin:${project_version}"
     
 }
