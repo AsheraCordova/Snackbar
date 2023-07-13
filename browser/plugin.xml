@@ -12,7 +12,7 @@
   <platform name="browser">
     <config-file target="config.xml" parent="/*">
       <feature name="CordovaSnackbar">
-        <param name="android-package" value="com.ashera.snackbar.CordovaSnackbar"/>
+        <param name="android-package" value="com.ashera.snackbar.CordovaSnackbarPlugin"/>
         <param name="onload" value="true" />
       </feature>
     </config-file>
