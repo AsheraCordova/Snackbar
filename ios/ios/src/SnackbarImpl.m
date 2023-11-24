@@ -614,14 +614,10 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarImpl_ViewExt)
     id<JavaUtilMap> obj = [self getOnClickEventObjWithADView:v];
     NSString *commandName = (NSString *) cast_chk([((id<JavaUtilMap>) nil_chk(obj)) getWithId:ASEventExpressionParser_KEY_COMMAND_NAME], [NSString class]);
     NSString *commandType = (NSString *) cast_chk([obj getWithId:ASEventExpressionParser_KEY_COMMAND_TYPE], [NSString class]);
-    switch (JreIndexOfStr(commandType, (id[]){ @"+", @":" }, 2)) {
+    switch (JreIndexOfStr(commandType, (id[]){ @"+" }, 1)) {
       case 0:
-      case 1:
       if (ASEventCommandFactory_hasCommandWithNSString_(commandName)) {
         (void) [((id<ASEventCommand>) nil_chk(ASEventCommandFactory_getCommandWithNSString_(commandName))) executeCommandWithASIWidget:w_ withJavaUtilMap:obj withNSObjectArray:[IOSObjectArray newArrayWithObjects:(id[]){ v } count:1 type:NSObject_class_()]];
-      }
-      if ([((NSString *) nil_chk(commandType)) isEqual:@":"]) {
-        return;
       }
       break;
       default:
@@ -634,7 +630,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarImpl_ViewExt)
     if ([((id<ASIWidget>) nil_chk(w_)) getModelUiToPojoEventIds] != nil) {
       ASViewImpl_refreshUiFromModelWithASIWidget_withId_withBoolean_(w_, [((id<ASIWidget>) nil_chk(w_)) getModelUiToPojoEventIds], true);
     }
-    if (strValue_ != nil && ![strValue_ java_isEmpty]) {
+    if (strValue_ != nil && ![strValue_ java_isEmpty] && ![((NSString *) nil_chk([((NSString *) nil_chk(strValue_)) java_trim])) java_hasPrefix:@"+"]) {
       id<ASIActivity> activity = [((id<ASIFragment>) nil_chk([((id<ASIWidget>) nil_chk(w_)) getFragment])) getRootActivity];
       [((id<ASIActivity>) nil_chk(activity)) sendEventMessageWithJavaUtilMap:obj];
     }

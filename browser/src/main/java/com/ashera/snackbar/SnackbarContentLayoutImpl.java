@@ -360,6 +360,31 @@ return layoutParams.weight;			}
             ((HTMLElement)asNativeWidget()).getStyle().setProperty("display", visibility != View.VISIBLE ? "none" : "block");
             
         }
+        
+        	public void state0() {
+        		ViewImpl.state(SnackbarContentLayoutImpl.this, 0);
+        	}
+        	public void state1() {
+        		ViewImpl.state(SnackbarContentLayoutImpl.this, 1);
+        	}
+        	public void state2() {
+        		ViewImpl.state(SnackbarContentLayoutImpl.this, 2);
+        	}
+        	public void state3() {
+        		ViewImpl.state(SnackbarContentLayoutImpl.this, 3);
+        	}
+        	public void state4() {
+        		ViewImpl.state(SnackbarContentLayoutImpl.this, 4);
+        	}
+                        
+        public void stateYes() {
+        	ViewImpl.stateYes(SnackbarContentLayoutImpl.this);
+        	
+        }
+        
+        public void stateNo() {
+        	ViewImpl.stateNo(SnackbarContentLayoutImpl.this);
+        }
 	}
 	@Override
 	public Class getViewClass() {
@@ -415,7 +440,7 @@ return layoutParams.weight;			}
 	public void setId(String id){
 		if (id != null && !id.equals("")){
 			super.setId(id);
-			snackbarContentLayout.setId(IdGenerator.getId(id));
+			snackbarContentLayout.setId((int) quickConvert(id, "id"));
 		}
 	}
 	
