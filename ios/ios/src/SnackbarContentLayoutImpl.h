@@ -216,6 +216,16 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl)
 - (void)setMyAttributeWithNSString:(NSString *)name
                             withId:(id)value;
 
+- (void)setState0WithId:(id)value;
+
+- (void)setState1WithId:(id)value;
+
+- (void)setState2WithId:(id)value;
+
+- (void)setState3WithId:(id)value;
+
+- (void)setState4WithId:(id)value;
+
 - (void)setVisibilityWithInt:(jint)visibility;
 
 - (void)state0;
@@ -283,6 +293,10 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)addModelWithId:(id)arg0;
 
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)animatorXmlWithNSString:(NSString *)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)endAnimator;
+
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)executeWithBoolean:(jboolean)setter;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)invalidate;
@@ -330,6 +344,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setCustomErrorMessageValuesWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setDuplicateParentStateWithBoolean:(jboolean)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setElevationWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setEnabledWithBoolean:(jboolean)arg0;
 
@@ -449,6 +465,14 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setModelUiToPojoWithNSString:(NSString *)arg0;
 
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setOnAnimationCancelWithNSString:(NSString *)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setOnAnimationEndWithNSString:(NSString *)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setOnAnimationRepeatWithNSString:(NSString *)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setOnAnimationStartWithNSString:(NSString *)arg0;
+
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setOnChildViewAddedWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setOnChildViewRemovedWithNSString:(NSString *)arg0;
@@ -534,6 +558,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setVisibilityWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setZIndexWithInt:(jint)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)startAnimator;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetAddStatesFromChildren;
 
