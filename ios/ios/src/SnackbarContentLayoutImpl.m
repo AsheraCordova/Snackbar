@@ -14,6 +14,7 @@
 #include "IWidget.h"
 #include "IWidgetLifeCycleListener.h"
 #include "J2ObjC_source.h"
+#include "LayoutTransition.h"
 #include "LinearLayout.h"
 #include "MeasureEvent.h"
 #include "OnLayoutEvent.h"
@@ -29,6 +30,7 @@
 #include "java/lang/Boolean.h"
 #include "java/lang/Float.h"
 #include "java/lang/Integer.h"
+#include "java/lang/Runnable.h"
 #include "java/lang/UnsupportedOperationException.h"
 #include "java/util/HashMap.h"
 #include "java/util/List.h"
@@ -41,6 +43,7 @@
 @protocol JavaUtilMap;
 
 
+#pragma clang diagnostic ignored "-Wprotocol"
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 
 @interface ASSnackbarContentLayoutImpl () {
@@ -54,6 +57,8 @@
 }
 
 - (void)setWidgetOnNativeClass;
+
+- (void)nativeRemoveViewWithASIWidget:(id<ASIWidget>)widget;
 
 - (void)createLayoutParamsWithADView:(ADView *)view;
 
@@ -69,6 +74,8 @@ J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl, paramsBuilder_, ASSnackbarConte
 J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl, paramsBean_, ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean *)
 
 __attribute__((unused)) static void ASSnackbarContentLayoutImpl_setWidgetOnNativeClass(ASSnackbarContentLayoutImpl *self);
+
+__attribute__((unused)) static void ASSnackbarContentLayoutImpl_nativeRemoveViewWithASIWidget_(ASSnackbarContentLayoutImpl *self, id<ASIWidget> widget);
 
 __attribute__((unused)) static void ASSnackbarContentLayoutImpl_createLayoutParamsWithADView_(ASSnackbarContentLayoutImpl *self, ADView *view);
 
@@ -103,6 +110,23 @@ J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt, templa
 }
 
 @end
+
+@interface ASSnackbarContentLayoutImpl_$Lambda$1 : NSObject < JavaLangRunnable > {
+ @public
+  id<ASIWidget> val$widget_;
+}
+
+- (void)run;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ASSnackbarContentLayoutImpl_$Lambda$1)
+
+__attribute__((unused)) static void ASSnackbarContentLayoutImpl_$Lambda$1_initWithASIWidget_(ASSnackbarContentLayoutImpl_$Lambda$1 *self, id<ASIWidget> capture$0);
+
+__attribute__((unused)) static ASSnackbarContentLayoutImpl_$Lambda$1 *new_ASSnackbarContentLayoutImpl_$Lambda$1_initWithASIWidget_(id<ASIWidget> capture$0) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ASSnackbarContentLayoutImpl_$Lambda$1 *create_ASSnackbarContentLayoutImpl_$Lambda$1_initWithASIWidget_(id<ASIWidget> capture$0);
 
 NSString *ASSnackbarContentLayoutImpl_LOCAL_NAME = @"com.google.android.material.snackbar.SnackbarContentLayout";
 NSString *ASSnackbarContentLayoutImpl_GROUP_NAME = @"com.google.android.material.snackbar.SnackbarContentLayout";
@@ -159,7 +183,7 @@ J2OBJC_IGNORE_DESIGNATED_END
 - (jboolean)removeWithASIWidget:(id<ASIWidget>)w {
   jboolean remove = [super removeWithASIWidget:w];
   [((ADXSnackbarContentLayout *) nil_chk(snackbarContentLayout_)) removeViewWithADView:(ADView *) cast_chk([((id<ASIWidget>) nil_chk(w)) asWidget], [ADView class])];
-  ASViewGroupImpl_nativeRemoveViewWithASIWidget_(w);
+  ASSnackbarContentLayoutImpl_nativeRemoveViewWithASIWidget_(self, w);
   return remove;
 }
 
@@ -168,9 +192,13 @@ J2OBJC_IGNORE_DESIGNATED_END
   jboolean remove = [super removeWithInt:index];
   if (index + 1 <= [((ADXSnackbarContentLayout *) nil_chk(snackbarContentLayout_)) getChildCount]) {
     [((ADXSnackbarContentLayout *) nil_chk(snackbarContentLayout_)) removeViewAtWithInt:index];
-    ASViewGroupImpl_nativeRemoveViewWithASIWidget_(widget);
+    ASSnackbarContentLayoutImpl_nativeRemoveViewWithASIWidget_(self, widget);
   }
   return remove;
+}
+
+- (void)nativeRemoveViewWithASIWidget:(id<ASIWidget>)widget {
+  ASSnackbarContentLayoutImpl_nativeRemoveViewWithASIWidget_(self, widget);
 }
 
 - (void)addWithASIWidget:(id<ASIWidget>)w
@@ -355,22 +383,23 @@ J2OBJC_IGNORE_DESIGNATED_END
     { NULL, "LNSObject;", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "Z", 0x1, 6, 7, -1, -1, -1, -1 },
     { NULL, "Z", 0x1, 6, 8, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, 9, 10, -1, -1, -1, -1 },
-    { NULL, "V", 0x2, 11, 12, -1, -1, -1, -1 },
-    { NULL, "LADLinearLayout_LayoutParams;", 0x2, 13, 12, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, 14, 15, -1, -1, -1, -1 },
-    { NULL, "LNSObject;", 0x1, 16, 17, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 9, 7, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 10, 11, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 12, 13, -1, -1, -1, -1 },
+    { NULL, "LADLinearLayout_LayoutParams;", 0x2, 14, 13, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 15, 16, -1, -1, -1, -1 },
+    { NULL, "LNSObject;", 0x1, 17, 18, -1, -1, -1, -1 },
     { NULL, "LIOSClass;", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, 18, 19, -1, -1, -1, -1 },
-    { NULL, "LNSObject;", 0x1, 20, 21, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 19, 20, -1, -1, -1, -1 },
+    { NULL, "LNSObject;", 0x1, 21, 22, -1, -1, -1, -1 },
     { NULL, "LNSObject;", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "Z", 0x101, 22, 1, -1, -1, -1, -1 },
-    { NULL, "V", 0x101, 23, 24, -1, 25, -1, -1 },
+    { NULL, "Z", 0x101, 23, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x101, 24, 25, -1, 26, -1, -1 },
     { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, 26, 1, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, 27, 28, -1, -1, -1, -1 },
-    { NULL, "LNSObject;", 0x1, 29, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 27, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 28, 29, -1, -1, -1, -1 },
+    { NULL, "LNSObject;", 0x1, 30, 1, -1, -1, -1, -1 },
     { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutBean;", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder;", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean;", 0x1, -1, -1, -1, -1, -1, -1 },
@@ -389,39 +418,40 @@ J2OBJC_IGNORE_DESIGNATED_END
   methods[7].selector = @selector(asWidget);
   methods[8].selector = @selector(removeWithASIWidget:);
   methods[9].selector = @selector(removeWithInt:);
-  methods[10].selector = @selector(addWithASIWidget:withInt:);
-  methods[11].selector = @selector(createLayoutParamsWithADView:);
-  methods[12].selector = @selector(getLayoutParamsWithADView:);
-  methods[13].selector = @selector(setChildAttributeWithASIWidget:withASWidgetAttribute:withNSString:withId:);
-  methods[14].selector = @selector(getChildAttributeWithASIWidget:withASWidgetAttribute:);
-  methods[15].selector = @selector(getViewClass);
-  methods[16].selector = @selector(setAttributeWithASWidgetAttribute:withNSString:withId:withASILifeCycleDecorator:);
-  methods[17].selector = @selector(getAttributeWithASWidgetAttribute:withASILifeCycleDecorator:);
-  methods[18].selector = @selector(asNativeWidget);
-  methods[19].selector = @selector(checkIosVersionWithNSString:);
-  methods[20].selector = @selector(nativeCreateWithJavaUtilMap:);
-  methods[21].selector = @selector(requestLayout);
-  methods[22].selector = @selector(invalidate);
-  methods[23].selector = @selector(setIdWithNSString:);
-  methods[24].selector = @selector(setVisibleWithBoolean:);
-  methods[25].selector = @selector(getPluginWithNSString:);
-  methods[26].selector = @selector(getBean);
-  methods[27].selector = @selector(getBuilder);
-  methods[28].selector = @selector(getParamsBean);
-  methods[29].selector = @selector(getParamsBuilder);
+  methods[10].selector = @selector(nativeRemoveViewWithASIWidget:);
+  methods[11].selector = @selector(addWithASIWidget:withInt:);
+  methods[12].selector = @selector(createLayoutParamsWithADView:);
+  methods[13].selector = @selector(getLayoutParamsWithADView:);
+  methods[14].selector = @selector(setChildAttributeWithASIWidget:withASWidgetAttribute:withNSString:withId:);
+  methods[15].selector = @selector(getChildAttributeWithASIWidget:withASWidgetAttribute:);
+  methods[16].selector = @selector(getViewClass);
+  methods[17].selector = @selector(setAttributeWithASWidgetAttribute:withNSString:withId:withASILifeCycleDecorator:);
+  methods[18].selector = @selector(getAttributeWithASWidgetAttribute:withASILifeCycleDecorator:);
+  methods[19].selector = @selector(asNativeWidget);
+  methods[20].selector = @selector(checkIosVersionWithNSString:);
+  methods[21].selector = @selector(nativeCreateWithJavaUtilMap:);
+  methods[22].selector = @selector(requestLayout);
+  methods[23].selector = @selector(invalidate);
+  methods[24].selector = @selector(setIdWithNSString:);
+  methods[25].selector = @selector(setVisibleWithBoolean:);
+  methods[26].selector = @selector(getPluginWithNSString:);
+  methods[27].selector = @selector(getBean);
+  methods[28].selector = @selector(getBuilder);
+  methods[29].selector = @selector(getParamsBean);
+  methods[30].selector = @selector(getParamsBuilder);
   #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
     { "uiView_", "LNSObject;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "LOCAL_NAME", "LNSString;", .constantValue.asLong = 0, 0x19, -1, 30, -1, -1 },
-    { "GROUP_NAME", "LNSString;", .constantValue.asLong = 0, 0x19, -1, 31, -1, -1 },
+    { "LOCAL_NAME", "LNSString;", .constantValue.asLong = 0, 0x19, -1, 31, -1, -1 },
+    { "GROUP_NAME", "LNSString;", .constantValue.asLong = 0, 0x19, -1, 32, -1, -1 },
     { "snackbarContentLayout_", "LADXSnackbarContentLayout;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "builder_", "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "bean_", "LASSnackbarContentLayoutImpl_SnackbarContentLayoutBean;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "paramsBuilder_", "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "paramsBean_", "LASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
   };
-  static const void *ptrTable[] = { "loadAttributes", "LNSString;", "LNSString;LNSString;", "create", "LASIFragment;LJavaUtilMap;", "(Lcom/ashera/core/IFragment;Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;)V", "remove", "LASIWidget;", "I", "add", "LASIWidget;I", "createLayoutParams", "LADView;", "getLayoutParams", "setChildAttribute", "LASIWidget;LASWidgetAttribute;LNSString;LNSObject;", "getChildAttribute", "LASIWidget;LASWidgetAttribute;", "setAttribute", "LASWidgetAttribute;LNSString;LNSObject;LASILifeCycleDecorator;", "getAttribute", "LASWidgetAttribute;LASILifeCycleDecorator;", "checkIosVersion", "nativeCreate", "LJavaUtilMap;", "(Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;)V", "setId", "setVisible", "Z", "getPlugin", &ASSnackbarContentLayoutImpl_LOCAL_NAME, &ASSnackbarContentLayoutImpl_GROUP_NAME, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutExt;LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder;LASSnackbarContentLayoutImpl_SnackbarContentLayoutBean;LASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean;LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;" };
-  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl = { "SnackbarContentLayoutImpl", "com.ashera.snackbar", ptrTable, methods, fields, 7, 0x1, 30, 8, -1, 32, -1, -1, -1 };
+  static const void *ptrTable[] = { "loadAttributes", "LNSString;", "LNSString;LNSString;", "create", "LASIFragment;LJavaUtilMap;", "(Lcom/ashera/core/IFragment;Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;)V", "remove", "LASIWidget;", "I", "nativeRemoveView", "add", "LASIWidget;I", "createLayoutParams", "LADView;", "getLayoutParams", "setChildAttribute", "LASIWidget;LASWidgetAttribute;LNSString;LNSObject;", "getChildAttribute", "LASIWidget;LASWidgetAttribute;", "setAttribute", "LASWidgetAttribute;LNSString;LNSObject;LASILifeCycleDecorator;", "getAttribute", "LASWidgetAttribute;LASILifeCycleDecorator;", "checkIosVersion", "nativeCreate", "LJavaUtilMap;", "(Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;)V", "setId", "setVisible", "Z", "getPlugin", &ASSnackbarContentLayoutImpl_LOCAL_NAME, &ASSnackbarContentLayoutImpl_GROUP_NAME, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutExt;LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder;LASSnackbarContentLayoutImpl_SnackbarContentLayoutBean;LASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean;LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;" };
+  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl = { "SnackbarContentLayoutImpl", "com.ashera.snackbar", ptrTable, methods, fields, 7, 0x1, 31, 8, -1, 33, -1, -1, -1 };
   return &_ASSnackbarContentLayoutImpl;
 }
 
@@ -465,6 +495,16 @@ ASSnackbarContentLayoutImpl *create_ASSnackbarContentLayoutImpl_initWithNSString
 
 void ASSnackbarContentLayoutImpl_setWidgetOnNativeClass(ASSnackbarContentLayoutImpl *self) {
   ((ASUIView*) [self asNativeWidget]).widget = self;
+}
+
+void ASSnackbarContentLayoutImpl_nativeRemoveViewWithASIWidget_(ASSnackbarContentLayoutImpl *self, id<ASIWidget> widget) {
+  ADLayoutTransition *layoutTransition = [((ADXSnackbarContentLayout *) nil_chk(self->snackbarContentLayout_)) getLayoutTransition];
+  if (layoutTransition != nil && ([layoutTransition isTransitionTypeEnabledWithInt:ADLayoutTransition_CHANGE_DISAPPEARING] || [layoutTransition isTransitionTypeEnabledWithInt:ADLayoutTransition_DISAPPEARING])) {
+    [self addToBufferedRunnablesWithJavaLangRunnable:new_ASSnackbarContentLayoutImpl_$Lambda$1_initWithASIWidget_(widget)];
+  }
+  else {
+    ASViewGroupImpl_nativeRemoveViewWithASIWidget_(widget);
+  }
 }
 
 void ASSnackbarContentLayoutImpl_createLayoutParamsWithADView_(ASSnackbarContentLayoutImpl *self, ADView *view) {
@@ -711,6 +751,11 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl)
   ASViewImpl_stateNoWithASIWidget_(this$0_);
 }
 
+- (void)endViewTransitionWithADView:(ADView *)view {
+  [super endViewTransitionWithADView:view];
+  [this$0_ runBufferedRunnables];
+}
+
 - (void)__javaClone:(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt *)original {
   [super __javaClone:original];
   JreRelease(this$0_);
@@ -755,6 +800,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl)
     { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 35, 36, -1, -1, -1, -1 },
   };
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
@@ -796,6 +842,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl)
   methods[34].selector = @selector(state4);
   methods[35].selector = @selector(stateYes);
   methods[36].selector = @selector(stateNo);
+  methods[37].selector = @selector(endViewTransitionWithADView:);
   #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
     { "this$0_", "LASSnackbarContentLayoutImpl;", .constantValue.asLong = 0, 0x1012, -1, -1, -1, -1 },
@@ -803,10 +850,10 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl)
     { "onLayoutEvent_", "LASOnLayoutEvent;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "mMaxWidth_", "I", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "mMaxHeight_", "I", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "templates_", "LJavaUtilMap;", .constantValue.asLong = 0, 0x2, -1, -1, 35, -1 },
+    { "templates_", "LJavaUtilMap;", .constantValue.asLong = 0, 0x2, -1, -1, 37, -1 },
   };
-  static const void *ptrTable[] = { "setMaxWidth", "I", "setMaxHeight", "LASSnackbarContentLayoutImpl;", "onMeasure", "II", "onLayout", "ZIIII", "execute", "LNSString;[LNSObject;", "updateMeasuredDimension", "newInstance", "LASIWidget;", "setAttribute", "LASWidgetAttribute;LNSString;LNSObject;", "()Ljava/util/List<Ljava/lang/String;>;", "getAttribute", "LASWidgetAttribute;", "inflateView", "LNSString;", "getLocationOnScreen", "[I", "getWindowVisibleDisplayFrame", "LADRect;", "offsetTopAndBottom", "offsetLeftAndRight", "setMyAttribute", "LNSString;LNSObject;", "setVisibility", "setState0", "LNSObject;", "setState1", "setState2", "setState3", "setState4", "Ljava/util/Map<Ljava/lang/String;Lcom/ashera/widget/IWidget;>;" };
-  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt = { "SnackbarContentLayoutExt", "com.ashera.snackbar", ptrTable, methods, fields, 7, 0x1, 37, 6, 3, -1, -1, -1, -1 };
+  static const void *ptrTable[] = { "setMaxWidth", "I", "setMaxHeight", "LASSnackbarContentLayoutImpl;", "onMeasure", "II", "onLayout", "ZIIII", "execute", "LNSString;[LNSObject;", "updateMeasuredDimension", "newInstance", "LASIWidget;", "setAttribute", "LASWidgetAttribute;LNSString;LNSObject;", "()Ljava/util/List<Ljava/lang/String;>;", "getAttribute", "LASWidgetAttribute;", "inflateView", "LNSString;", "getLocationOnScreen", "[I", "getWindowVisibleDisplayFrame", "LADRect;", "offsetTopAndBottom", "offsetLeftAndRight", "setMyAttribute", "LNSString;LNSObject;", "setVisibility", "setState0", "LNSObject;", "setState1", "setState2", "setState3", "setState4", "endViewTransition", "LADView;", "Ljava/util/Map<Ljava/lang/String;Lcom/ashera/widget/IWidget;>;" };
+  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt = { "SnackbarContentLayoutExt", "com.ashera.snackbar", ptrTable, methods, fields, 7, 0x1, 38, 6, 3, -1, -1, -1, -1 };
   return &_ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt;
 }
 
@@ -1093,3 +1140,24 @@ ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *create_AS
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder)
+
+@implementation ASSnackbarContentLayoutImpl_$Lambda$1
+
+- (void)run {
+  ASViewGroupImpl_nativeRemoveViewWithASIWidget_(val$widget_);
+}
+
+@end
+
+void ASSnackbarContentLayoutImpl_$Lambda$1_initWithASIWidget_(ASSnackbarContentLayoutImpl_$Lambda$1 *self, id<ASIWidget> capture$0) {
+  self->val$widget_ = capture$0;
+  NSObject_init(self);
+}
+
+ASSnackbarContentLayoutImpl_$Lambda$1 *new_ASSnackbarContentLayoutImpl_$Lambda$1_initWithASIWidget_(id<ASIWidget> capture$0) {
+  J2OBJC_NEW_IMPL(ASSnackbarContentLayoutImpl_$Lambda$1, initWithASIWidget_, capture$0)
+}
+
+ASSnackbarContentLayoutImpl_$Lambda$1 *create_ASSnackbarContentLayoutImpl_$Lambda$1_initWithASIWidget_(id<ASIWidget> capture$0) {
+  J2OBJC_CREATE_IMPL(ASSnackbarContentLayoutImpl_$Lambda$1, initWithASIWidget_, capture$0)
+}

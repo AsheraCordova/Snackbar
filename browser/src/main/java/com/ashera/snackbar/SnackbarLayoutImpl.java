@@ -79,7 +79,7 @@ public class SnackbarLayoutImpl extends BaseHasWidgets {
 	public boolean remove(IWidget w) {		
 		boolean remove = super.remove(w);
 		snackbarLayout.removeView((View) w.asWidget());
-         ViewGroupImpl.nativeRemoveView(w);            
+		 nativeRemoveView(w);            
 		return remove;
 	}
 	
@@ -90,10 +90,22 @@ public class SnackbarLayoutImpl extends BaseHasWidgets {
 
         if (index + 1 <= snackbarLayout.getChildCount()) {
             snackbarLayout.removeViewAt(index);
-            ViewGroupImpl.nativeRemoveView(widget);            
+            nativeRemoveView(widget);
         }    
         return remove;
     }
+	
+	private void nativeRemoveView(IWidget widget) {
+		r.android.animation.LayoutTransition layoutTransition = snackbarLayout.getLayoutTransition();
+		if (layoutTransition != null && (
+				layoutTransition.isTransitionTypeEnabled(r.android.animation.LayoutTransition.CHANGE_DISAPPEARING) ||
+				layoutTransition.isTransitionTypeEnabled(r.android.animation.LayoutTransition.DISAPPEARING)
+				)) {
+			addToBufferedRunnables(() -> ViewGroupImpl.nativeRemoveView(widget));          
+		} else {
+			ViewGroupImpl.nativeRemoveView(widget);
+		}
+	}
 	
 	@Override
 	public void add(IWidget w, int index) {
@@ -413,6 +425,12 @@ return layoutParams.gravity;			}
         public void stateNo() {
         	ViewImpl.stateNo(SnackbarLayoutImpl.this);
         }
+     
+		@Override
+		public void endViewTransition(r.android.view.View view) {
+			super.endViewTransition(view);
+			runBufferedRunnables();
+		}
 	}
 	@Override
 	public Class getViewClass() {
