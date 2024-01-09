@@ -105,7 +105,7 @@ public class SnackbarContentLayoutImpl extends BaseHasWidgets {
         }    
         return remove;
     }
-	
+
 	private void nativeRemoveView(IWidget widget) {
 		r.android.animation.LayoutTransition layoutTransition = snackbarContentLayout.getLayoutTransition();
 		if (layoutTransition != null && (
