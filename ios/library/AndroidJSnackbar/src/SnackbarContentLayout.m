@@ -3,18 +3,23 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\SnackbarContentLayout.java
 //
 
+#include "BaseTransientBottomBar.h"
 #include "Button.h"
+#include "IOSPrimitiveArray.h"
 #include "J2ObjC_source.h"
 #include "LinearLayout.h"
+#include "ObjectAnimator.h"
 #include "PluginInvoker.h"
 #include "SnackbarContentLayout.h"
 #include "TextView.h"
+#include "TimeInterpolator.h"
 #include "View.h"
 #include "ViewCompat.h"
 
 
 @interface ADXSnackbarContentLayout () {
  @public
+  id<ADTimeInterpolator> contentInterpolator_;
   jint maxInlineActionWidth_;
 }
 
@@ -29,6 +34,8 @@
 - (jint)getNoOfLines;
 
 @end
+
+J2OBJC_FIELD_SETTER(ADXSnackbarContentLayout, contentInterpolator_, id<ADTimeInterpolator>)
 
 __attribute__((unused)) static jboolean ADXSnackbarContentLayout_updateViewsWithinLayoutWithInt_withInt_withInt_(ADXSnackbarContentLayout *self, jint orientation, jint messagePadTop, jint messagePadBottom);
 
@@ -83,6 +90,38 @@ J2OBJC_IGNORE_DESIGNATED_END
   ADXSnackbarContentLayout_updateTopBottomPaddingWithADView_withInt_withInt_(view, topPadding, bottomPadding);
 }
 
+- (void)animateContentInWithInt:(jint)delay
+                        withInt:(jint)duration {
+  ADObjectAnimator *o = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getMessageView], @"alpha", [IOSFloatArray arrayWithFloats:(jfloat[]){ 0.0f, 1.0f } count:2]);
+  [((ADObjectAnimator *) nil_chk(o)) setDurationWithLong:duration];
+  [o setInterpolatorWithADTimeInterpolator:contentInterpolator_];
+  [o setStartDelayWithLong:delay];
+  [o start];
+  if ([((ADButton *) nil_chk([self getActionView])) getVisibility] == ADView_VISIBLE) {
+    ADObjectAnimator *o1 = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getActionView], @"alpha", [IOSFloatArray arrayWithFloats:(jfloat[]){ 0.0f, 1.0f } count:2]);
+    [((ADObjectAnimator *) nil_chk(o1)) setDurationWithLong:duration];
+    [o setInterpolatorWithADTimeInterpolator:contentInterpolator_];
+    [o1 setStartDelayWithLong:delay];
+    [o1 start];
+  }
+}
+
+- (void)animateContentOutWithInt:(jint)delay
+                         withInt:(jint)duration {
+  ADObjectAnimator *o = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getMessageView], @"alpha", [IOSFloatArray arrayWithFloats:(jfloat[]){ 1.0f, 0.0f } count:2]);
+  [((ADObjectAnimator *) nil_chk(o)) setDurationWithLong:duration];
+  [o setInterpolatorWithADTimeInterpolator:contentInterpolator_];
+  [o setStartDelayWithLong:delay];
+  [o start];
+  if ([((ADButton *) nil_chk([self getActionView])) getVisibility] == ADView_VISIBLE) {
+    ADObjectAnimator *o1 = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getActionView], @"alpha", [IOSFloatArray arrayWithFloats:(jfloat[]){ 1.0f, 0.0f } count:2]);
+    [((ADObjectAnimator *) nil_chk(o1)) setDurationWithLong:duration];
+    [o setInterpolatorWithADTimeInterpolator:contentInterpolator_];
+    [o1 setStartDelayWithLong:delay];
+    [o1 start];
+  }
+}
+
 - (void)setMaxInlineActionWidthWithInt:(jint)width {
   maxInlineActionWidth_ = width;
 }
@@ -99,13 +138,20 @@ J2OBJC_IGNORE_DESIGNATED_END
   return ADXSnackbarContentLayout_getNoOfLines(self);
 }
 
+- (void)dealloc {
+  RELEASE_(contentInterpolator_);
+  [super dealloc];
+}
+
 + (const J2ObjcClassInfo *)__metadata {
   static J2ObjcMethodInfo methods[] = {
     { NULL, NULL, 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x4, 0, 1, -1, -1, -1, -1 },
     { NULL, "Z", 0x2, 2, 3, -1, -1, -1, -1 },
     { NULL, "V", 0xa, 4, 5, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, 6, 7, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 6, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 7, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 8, 9, -1, -1, -1, -1 },
     { NULL, "LADTextView;", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "LADButton;", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "I", 0x2, -1, -1, -1, -1, -1, -1 },
@@ -117,16 +163,19 @@ J2OBJC_IGNORE_DESIGNATED_END
   methods[1].selector = @selector(onMeasureWithInt:withInt:);
   methods[2].selector = @selector(updateViewsWithinLayoutWithInt:withInt:withInt:);
   methods[3].selector = @selector(updateTopBottomPaddingWithADView:withInt:withInt:);
-  methods[4].selector = @selector(setMaxInlineActionWidthWithInt:);
-  methods[5].selector = @selector(getMessageView);
-  methods[6].selector = @selector(getActionView);
-  methods[7].selector = @selector(getNoOfLines);
+  methods[4].selector = @selector(animateContentInWithInt:withInt:);
+  methods[5].selector = @selector(animateContentOutWithInt:withInt:);
+  methods[6].selector = @selector(setMaxInlineActionWidthWithInt:);
+  methods[7].selector = @selector(getMessageView);
+  methods[8].selector = @selector(getActionView);
+  methods[9].selector = @selector(getNoOfLines);
   #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
+    { "contentInterpolator_", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
     { "maxInlineActionWidth_", "I", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
   };
-  static const void *ptrTable[] = { "onMeasure", "II", "updateViewsWithinLayout", "III", "updateTopBottomPadding", "LADView;II", "setMaxInlineActionWidth", "I" };
-  static const J2ObjcClassInfo _ADXSnackbarContentLayout = { "SnackbarContentLayout", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x1, 8, 1, -1, -1, -1, -1, -1 };
+  static const void *ptrTable[] = { "onMeasure", "II", "updateViewsWithinLayout", "III", "updateTopBottomPadding", "LADView;II", "animateContentIn", "animateContentOut", "setMaxInlineActionWidth", "I" };
+  static const J2ObjcClassInfo _ADXSnackbarContentLayout = { "SnackbarContentLayout", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x1, 10, 2, -1, -1, -1, -1, -1 };
   return &_ADXSnackbarContentLayout;
 }
 
@@ -134,6 +183,7 @@ J2OBJC_IGNORE_DESIGNATED_END
 
 void ADXSnackbarContentLayout_init(ADXSnackbarContentLayout *self) {
   ADLinearLayout_init(self);
+  JreStrongAssign(&self->contentInterpolator_, JreLoadStatic(ADXBaseTransientBottomBar, FAST_OUT_SLOW_IN_INTERPOLATOR));
 }
 
 ADXSnackbarContentLayout *new_ADXSnackbarContentLayout_init() {

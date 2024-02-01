@@ -25,6 +25,7 @@
 @class ADViewGroup;
 @class ADXBaseTransientBottomBar_SnackbarBaseLayout;
 @class ADXBaseTransientBottomBar_SwipeDismissBehavior;
+@protocol ADTimeInterpolator;
 @protocol ADXSnackbarManager_Callback;
 
 @interface ADXBaseTransientBottomBar : NSObject {
@@ -35,17 +36,17 @@
 
 #pragma mark Public
 
-- (void)animateViewIn;
-
-- (void)animateViewOutWithInt:(jint)event;
-
 - (void)dismiss;
 
 - (ADView *)getAnchorView;
 
+- (jint)getAnimationMode;
+
 - (jint)getDuration;
 
 - (jint)getScreenHeight;
+
+- (ADXBaseTransientBottomBar *)setAnimationModeWithInt:(jint)animationMode;
 
 - (ADXBaseTransientBottomBar *)setDurationWithInt:(jint)duration;
 
@@ -62,6 +63,8 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
 - (ADXBaseTransientBottomBar_SwipeDismissBehavior *)getNewBehavior;
 
 #pragma mark Package-Private
+
+- (void)animateViewIn;
 
 - (void)hideViewWithInt:(jint)event;
 
@@ -120,6 +123,31 @@ J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, MSG_SHOW, jint)
 inline jint ADXBaseTransientBottomBar_get_MSG_DISMISS(void);
 #define ADXBaseTransientBottomBar_MSG_DISMISS 1
 J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, MSG_DISMISS, jint)
+
+inline id<ADTimeInterpolator> ADXBaseTransientBottomBar_get_LINEAR_INTERPOLATOR(void);
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT id<ADTimeInterpolator> ADXBaseTransientBottomBar_LINEAR_INTERPOLATOR;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, LINEAR_INTERPOLATOR, id<ADTimeInterpolator>)
+
+inline id<ADTimeInterpolator> ADXBaseTransientBottomBar_get_FAST_OUT_SLOW_IN_INTERPOLATOR(void);
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT id<ADTimeInterpolator> ADXBaseTransientBottomBar_FAST_OUT_SLOW_IN_INTERPOLATOR;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, FAST_OUT_SLOW_IN_INTERPOLATOR, id<ADTimeInterpolator>)
+
+inline id<ADTimeInterpolator> ADXBaseTransientBottomBar_get_FAST_OUT_LINEAR_IN_INTERPOLATOR(void);
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT id<ADTimeInterpolator> ADXBaseTransientBottomBar_FAST_OUT_LINEAR_IN_INTERPOLATOR;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, FAST_OUT_LINEAR_IN_INTERPOLATOR, id<ADTimeInterpolator>)
+
+inline id<ADTimeInterpolator> ADXBaseTransientBottomBar_get_LINEAR_OUT_SLOW_IN_INTERPOLATOR(void);
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT id<ADTimeInterpolator> ADXBaseTransientBottomBar_LINEAR_OUT_SLOW_IN_INTERPOLATOR;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, LINEAR_OUT_SLOW_IN_INTERPOLATOR, id<ADTimeInterpolator>)
+
+inline id<ADTimeInterpolator> ADXBaseTransientBottomBar_get_DECELERATE_INTERPOLATOR(void);
+/*! INTERNAL ONLY - Use accessor function from above. */
+FOUNDATION_EXPORT id<ADTimeInterpolator> ADXBaseTransientBottomBar_DECELERATE_INTERPOLATOR;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, DECELERATE_INTERPOLATOR, id<ADTimeInterpolator>)
 
 FOUNDATION_EXPORT void ADXBaseTransientBottomBar_initWithADContext_withADViewGroup_withADXBaseTransientBottomBar_SnackbarBaseLayout_(ADXBaseTransientBottomBar *self, ADContext *context, ADViewGroup *parent, ADXBaseTransientBottomBar_SnackbarBaseLayout *view);
 
@@ -211,6 +239,10 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_SwipeDismissBehavior_OnDism
 #pragma mark Package-Private
 
 - (void)addToTargetParentWithADViewGroup:(ADViewGroup *)targetParent;
+
+- (jint)getAnimationMode;
+
+- (void)setAnimationModeWithInt:(jint)animationMode;
 
 @end
 

@@ -23,6 +23,9 @@
      <!-- start res -->
      <!-- res end -->
      <!-- start tsc -->
+     <source-file src="tsc/src/swt/widget/SnackbarContentLayoutImpl.ts" target-dir="tsc/src/swt/widget"/>
+     <source-file src="tsc/src/swt/widget/SnackbarImpl.ts" target-dir="tsc/src/swt/widget"/>
+     <source-file src="tsc/src/swt/widget/SnackbarLayoutImpl.ts" target-dir="tsc/src/swt/widget"/>
      <!-- tsc end -->
   </platform>
 

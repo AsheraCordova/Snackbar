@@ -53,6 +53,8 @@
      <!-- start AndroidJSnackbar -->
      <header-file src="ios/library/AndroidJSnackbar/src/BaseTransientBottomBar.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
      <source-file src="ios/library/AndroidJSnackbar/src/BaseTransientBottomBar.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
+     <header-file src="ios/library/AndroidJSnackbar/src/ContentViewCallback.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
+     <source-file src="ios/library/AndroidJSnackbar/src/ContentViewCallback.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
      <header-file src="ios/library/AndroidJSnackbar/src/Snackbar.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
      <source-file src="ios/library/AndroidJSnackbar/src/Snackbar.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
      <header-file src="ios/library/AndroidJSnackbar/src/SnackbarContentLayout.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
@@ -80,6 +82,9 @@
      <!-- start res -->
      <!-- res end -->
      <!-- start tsc -->
+     <source-file src="browser/tsc/src/web/widget/SnackbarContentLayoutImpl.ts" target-dir="tsc/src/web/widget"/>
+     <source-file src="browser/tsc/src/web/widget/SnackbarImpl.ts" target-dir="tsc/src/web/widget"/>
+     <source-file src="browser/tsc/src/web/widget/SnackbarLayoutImpl.ts" target-dir="tsc/src/web/widget"/>
      <!-- tsc end -->
   </platform>
   <platform name="swt">
@@ -96,6 +101,9 @@
      <!-- start res -->
      <!-- res end -->
      <!-- start tsc -->
+     <source-file src="swt/tsc/src/swt/widget/SnackbarContentLayoutImpl.ts" target-dir="tsc/src/swt/widget"/>
+     <source-file src="swt/tsc/src/swt/widget/SnackbarImpl.ts" target-dir="tsc/src/swt/widget"/>
+     <source-file src="swt/tsc/src/swt/widget/SnackbarLayoutImpl.ts" target-dir="tsc/src/swt/widget"/>
      <!-- tsc end -->
   </platform>
 

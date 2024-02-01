@@ -351,6 +351,7 @@ public java.util.Map<String, Object> getOnClickEventObj(View v) {
 			
 			setBackgroundAttributes();
 			
+			snackbar.dismiss();
 			snackbar.show();
 		} else {
 			if (snackbar != null) {

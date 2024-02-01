@@ -20,15 +20,25 @@
 #define INCLUDE_ADLinearLayout 1
 #include "LinearLayout.h"
 
+#define RESTRICT_ContentViewCallback 1
+#define INCLUDE_ADXContentViewCallback 1
+#include "ContentViewCallback.h"
+
 @class ADButton;
 @class ADContext;
 @class ADTextView;
 
-@interface ADXSnackbarContentLayout : ADLinearLayout
+@interface ADXSnackbarContentLayout : ADLinearLayout < ADXContentViewCallback >
 
 #pragma mark Public
 
 - (instancetype)init;
+
+- (void)animateContentInWithInt:(jint)delay
+                        withInt:(jint)duration;
+
+- (void)animateContentOutWithInt:(jint)delay
+                         withInt:(jint)duration;
 
 - (ADButton *)getActionView;
 

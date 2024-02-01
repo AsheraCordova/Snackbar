@@ -53,6 +53,8 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
 
 - (ADXSnackbar *)setActionTextColorWithADColorStateList:(ADColorStateList *)colors;
 
+- (ADXSnackbar *)setAnimationModeWithInt:(jint)arg0;
+
 - (void)setBackgroundWithADDrawable:(ADDrawable *)background;
 
 - (ADXSnackbar *)setDurationWithInt:(jint)arg0;

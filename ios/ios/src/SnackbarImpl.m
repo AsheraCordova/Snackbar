@@ -468,6 +468,7 @@ void ASSnackbarImpl_showWithId_(ASSnackbarImpl *self, id objValue) {
       (void) [((ADXSnackbar *) nil_chk(self->snackbar_)) setMaxInlineActionWidthWithInt:self->maxInlineActionWidth_];
     }
     ASSnackbarImpl_setBackgroundAttributes(self);
+    [((ADXSnackbar *) nil_chk(self->snackbar_)) dismiss];
     [((ADXSnackbar *) nil_chk(self->snackbar_)) show];
   }
   else {
@@ -534,7 +535,9 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarImpl)
 }
 
 - (void)remeasure {
-  [((id<ASIFragment>) nil_chk([this$0_ getFragment])) remeasure];
+  if ([this$0_ getFragment] != nil) {
+    [((id<ASIFragment>) nil_chk([this$0_ getFragment])) remeasure];
+  }
 }
 
 - (ADView *)inflateViewWithNSString:(NSString *)layout {

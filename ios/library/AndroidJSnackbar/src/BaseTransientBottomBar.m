@@ -3,28 +3,43 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\BaseTransientBottomBar.java
 //
 
+#include "Animator.h"
+#include "AnimatorListenerAdapter.h"
+#include "AnimatorSet.h"
 #include "BaseTransientBottomBar.h"
+#include "ContentViewCallback.h"
 #include "Context.h"
 #include "CoordinatorLayout.h"
+#include "DecelerateInterpolator.h"
+#include "FastOutLinearInInterpolator.h"
+#include "FastOutSlowInInterpolator.h"
 #include "FrameLayout.h"
 #include "Gravity.h"
 #include "Handler.h"
 #include "IOSClass.h"
+#include "IOSObjectArray.h"
 #include "IOSPrimitiveArray.h"
 #include "J2ObjC_source.h"
+#include "LinearInterpolator.h"
+#include "LinearOutSlowInInterpolator.h"
 #include "Log.h"
 #include "Looper.h"
 #include "Message.h"
 #include "PluginInvoker.h"
 #include "Rect.h"
+#include "SnackbarContentLayout.h"
 #include "SnackbarManager.h"
 #include "SwipeHelper.h"
+#include "TimeInterpolator.h"
+#include "ValueAnimator.h"
 #include "View.h"
 #include "ViewCompat.h"
 #include "ViewGroup.h"
 #include "ViewParent.h"
 #include "java/lang/Exception.h"
+#include "java/lang/Float.h"
 #include "java/lang/IllegalArgumentException.h"
+#include "java/lang/Integer.h"
 #include "java/lang/Runnable.h"
 #include "java/lang/ref/WeakReference.h"
 
@@ -37,8 +52,12 @@
   jint animationFadeInDuration_;
   jint animationFadeOutDuration_;
   jint animationSlideDuration_;
+  id<ADTimeInterpolator> animationFadeInterpolator_;
+  id<ADTimeInterpolator> animationSlideInterpolator_;
+  id<ADTimeInterpolator> animationScaleInterpolator_;
   ADViewGroup *targetParent_;
   ADContext *context_;
+  id<ADXContentViewCallback> contentViewCallback_;
   jint duration_;
   jboolean gestureInsetBottomIgnored_;
   ADXBaseTransientBottomBar_Anchor *anchor_;
@@ -69,14 +88,36 @@
 
 - (jint)calculateBottomMarginForAnchorView;
 
+- (void)animateViewOutWithInt:(jint)event;
+
+- (void)startFadeInAnimation;
+
+- (void)startFadeOutAnimationWithInt:(jint)event;
+
+- (ADValueAnimator *)getAlphaAnimatorWithFloatArray:(IOSFloatArray *)alphaValues;
+
+- (ADValueAnimator *)getScaleAnimatorWithFloatArray:(IOSFloatArray *)scaleValues;
+
+- (void)startSlideInAnimation;
+
+- (void)startSlideOutAnimationWithInt:(jint)event;
+
+- (jint)getTranslationYBottom;
+
 - (void)onViewHiddenWithInt:(jint)event;
 
 - (void)onViewShown;
 
+- (void)onChildViewsChangedWithADView:(ADView *)view;
+
 @end
 
+J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, animationFadeInterpolator_, id<ADTimeInterpolator>)
+J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, animationSlideInterpolator_, id<ADTimeInterpolator>)
+J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, animationScaleInterpolator_, id<ADTimeInterpolator>)
 J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, targetParent_, ADViewGroup *)
 J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, context_, ADContext *)
+J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, contentViewCallback_, id<ADXContentViewCallback>)
 J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, anchor_, ADXBaseTransientBottomBar_Anchor *)
 J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, bottomMarginGestureInsetRunnable_, id<JavaLangRunnable>)
 J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, behavior_, ADXBaseTransientBottomBar_Behavior *)
@@ -89,13 +130,29 @@ inline jint ADXBaseTransientBottomBar_get_DEFAULT_ANIMATION_FADE_OUT_DURATION(vo
 #define ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_OUT_DURATION 75
 J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, DEFAULT_ANIMATION_FADE_OUT_DURATION, jint)
 
+inline jfloat ADXBaseTransientBottomBar_get_ANIMATION_SCALE_FROM_VALUE(void);
+#define ADXBaseTransientBottomBar_ANIMATION_SCALE_FROM_VALUE 0.8f
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, ANIMATION_SCALE_FROM_VALUE, jfloat)
+
 inline jboolean ADXBaseTransientBottomBar_get_USE_OFFSET_API(void);
-#define ADXBaseTransientBottomBar_USE_OFFSET_API false
+#define ADXBaseTransientBottomBar_USE_OFFSET_API true
 J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, USE_OFFSET_API, jboolean)
 
 inline NSString *ADXBaseTransientBottomBar_get_TAG(void);
 static NSString *ADXBaseTransientBottomBar_TAG;
 J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, TAG, NSString *)
+
+inline id<ADTimeInterpolator> ADXBaseTransientBottomBar_get_DEFAULT_ANIMATION_FADE_INTERPOLATOR(void);
+static id<ADTimeInterpolator> ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_INTERPOLATOR;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, DEFAULT_ANIMATION_FADE_INTERPOLATOR, id<ADTimeInterpolator>)
+
+inline id<ADTimeInterpolator> ADXBaseTransientBottomBar_get_DEFAULT_ANIMATION_SCALE_INTERPOLATOR(void);
+static id<ADTimeInterpolator> ADXBaseTransientBottomBar_DEFAULT_ANIMATION_SCALE_INTERPOLATOR;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, DEFAULT_ANIMATION_SCALE_INTERPOLATOR, id<ADTimeInterpolator>)
+
+inline id<ADTimeInterpolator> ADXBaseTransientBottomBar_get_DEFAULT_ANIMATION_SLIDE_INTERPOLATOR(void);
+static id<ADTimeInterpolator> ADXBaseTransientBottomBar_DEFAULT_ANIMATION_SLIDE_INTERPOLATOR;
+J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, DEFAULT_ANIMATION_SLIDE_INTERPOLATOR, id<ADTimeInterpolator>)
 
 __attribute__((unused)) static void ADXBaseTransientBottomBar_updateMargins(ADXBaseTransientBottomBar *self);
 
@@ -115,11 +172,29 @@ __attribute__((unused)) static void ADXBaseTransientBottomBar_recalculateAndUpda
 
 __attribute__((unused)) static jint ADXBaseTransientBottomBar_calculateBottomMarginForAnchorView(ADXBaseTransientBottomBar *self);
 
+__attribute__((unused)) static void ADXBaseTransientBottomBar_animateViewOutWithInt_(ADXBaseTransientBottomBar *self, jint event);
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_startFadeInAnimation(ADXBaseTransientBottomBar *self);
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_startFadeOutAnimationWithInt_(ADXBaseTransientBottomBar *self, jint event);
+
+__attribute__((unused)) static ADValueAnimator *ADXBaseTransientBottomBar_getAlphaAnimatorWithFloatArray_(ADXBaseTransientBottomBar *self, IOSFloatArray *alphaValues);
+
+__attribute__((unused)) static ADValueAnimator *ADXBaseTransientBottomBar_getScaleAnimatorWithFloatArray_(ADXBaseTransientBottomBar *self, IOSFloatArray *scaleValues);
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_startSlideInAnimation(ADXBaseTransientBottomBar *self);
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_startSlideOutAnimationWithInt_(ADXBaseTransientBottomBar *self, jint event);
+
+__attribute__((unused)) static jint ADXBaseTransientBottomBar_getTranslationYBottom(ADXBaseTransientBottomBar *self);
+
 __attribute__((unused)) static void ADXBaseTransientBottomBar_hideViewWithInt_(ADXBaseTransientBottomBar *self, jint event);
 
 __attribute__((unused)) static void ADXBaseTransientBottomBar_onViewHiddenWithInt_(ADXBaseTransientBottomBar *self, jint event);
 
 __attribute__((unused)) static void ADXBaseTransientBottomBar_onViewShown(ADXBaseTransientBottomBar *self);
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_onChildViewsChangedWithADView_(ADXBaseTransientBottomBar *self, ADView *view);
 
 @interface ADXBaseTransientBottomBar_1 : NSObject < JavaLangRunnable > {
  @public
@@ -186,6 +261,188 @@ __attribute__((unused)) static ADXBaseTransientBottomBar_3 *new_ADXBaseTransient
 
 __attribute__((unused)) static ADXBaseTransientBottomBar_3 *create_ADXBaseTransientBottomBar_3_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$);
 
+@interface ADXBaseTransientBottomBar_4 : NSObject < JavaLangRunnable > {
+ @public
+  ADXBaseTransientBottomBar *this$0_;
+}
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$;
+
+- (void)run;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_4)
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_4_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_4 *self, ADXBaseTransientBottomBar *outer$);
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_4 *new_ADXBaseTransientBottomBar_4_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_4 *create_ADXBaseTransientBottomBar_4_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$);
+
+@interface ADXBaseTransientBottomBar_5 : ADAnimatorListenerAdapter {
+ @public
+  ADXBaseTransientBottomBar *this$0_;
+}
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$;
+
+- (void)onAnimationEndWithADAnimator:(ADAnimator *)animator;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_5)
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_5_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_5 *self, ADXBaseTransientBottomBar *outer$);
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_5 *new_ADXBaseTransientBottomBar_5_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_5 *create_ADXBaseTransientBottomBar_5_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$);
+
+@interface ADXBaseTransientBottomBar_6 : ADAnimatorListenerAdapter {
+ @public
+  ADXBaseTransientBottomBar *this$0_;
+  jint val$event_;
+}
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$
+                                          withInt:(jint)capture$0;
+
+- (void)onAnimationEndWithADAnimator:(ADAnimator *)animator;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_6)
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_6_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar_6 *self, ADXBaseTransientBottomBar *outer$, jint capture$0);
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_6 *new_ADXBaseTransientBottomBar_6_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_6 *create_ADXBaseTransientBottomBar_6_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0);
+
+@interface ADXBaseTransientBottomBar_7 : NSObject < ADValueAnimator_AnimatorUpdateListener > {
+ @public
+  ADXBaseTransientBottomBar *this$0_;
+}
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$;
+
+- (void)onAnimationUpdateWithADValueAnimator:(ADValueAnimator *)valueAnimator;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_7)
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_7_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_7 *self, ADXBaseTransientBottomBar *outer$);
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_7 *new_ADXBaseTransientBottomBar_7_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_7 *create_ADXBaseTransientBottomBar_7_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$);
+
+@interface ADXBaseTransientBottomBar_8 : NSObject < ADValueAnimator_AnimatorUpdateListener > {
+ @public
+  ADXBaseTransientBottomBar *this$0_;
+}
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$;
+
+- (void)onAnimationUpdateWithADValueAnimator:(ADValueAnimator *)valueAnimator;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_8)
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_8_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_8 *self, ADXBaseTransientBottomBar *outer$);
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_8 *new_ADXBaseTransientBottomBar_8_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_8 *create_ADXBaseTransientBottomBar_8_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$);
+
+@interface ADXBaseTransientBottomBar_9 : ADAnimatorListenerAdapter {
+ @public
+  ADXBaseTransientBottomBar *this$0_;
+}
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$;
+
+- (void)onAnimationStartWithADAnimator:(ADAnimator *)animator;
+
+- (void)onAnimationEndWithADAnimator:(ADAnimator *)animator;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_9)
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_9_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_9 *self, ADXBaseTransientBottomBar *outer$);
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_9 *new_ADXBaseTransientBottomBar_9_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_9 *create_ADXBaseTransientBottomBar_9_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$);
+
+@interface ADXBaseTransientBottomBar_10 : NSObject < ADValueAnimator_AnimatorUpdateListener > {
+ @public
+  ADXBaseTransientBottomBar *this$0_;
+  jint previousAnimatedIntValue_;
+}
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$
+                                          withInt:(jint)capture$0;
+
+- (void)onAnimationUpdateWithADValueAnimator:(ADValueAnimator *)animator;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_10)
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_10_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar_10 *self, ADXBaseTransientBottomBar *outer$, jint capture$0);
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_10 *new_ADXBaseTransientBottomBar_10_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_10 *create_ADXBaseTransientBottomBar_10_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0);
+
+@interface ADXBaseTransientBottomBar_11 : ADAnimatorListenerAdapter {
+ @public
+  ADXBaseTransientBottomBar *this$0_;
+  jint val$event_;
+}
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$
+                                          withInt:(jint)capture$0;
+
+- (void)onAnimationStartWithADAnimator:(ADAnimator *)animator;
+
+- (void)onAnimationEndWithADAnimator:(ADAnimator *)animator;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_11)
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_11_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar_11 *self, ADXBaseTransientBottomBar *outer$, jint capture$0);
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_11 *new_ADXBaseTransientBottomBar_11_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_11 *create_ADXBaseTransientBottomBar_11_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0);
+
+@interface ADXBaseTransientBottomBar_12 : NSObject < ADValueAnimator_AnimatorUpdateListener > {
+ @public
+  ADXBaseTransientBottomBar *this$0_;
+  jint previousAnimatedIntValue_;
+}
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$;
+
+- (void)onAnimationUpdateWithADValueAnimator:(ADValueAnimator *)animator;
+
+@end
+
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_12)
+
+__attribute__((unused)) static void ADXBaseTransientBottomBar_12_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_12 *self, ADXBaseTransientBottomBar *outer$);
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_12 *new_ADXBaseTransientBottomBar_12_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) NS_RETURNS_RETAINED;
+
+__attribute__((unused)) static ADXBaseTransientBottomBar_12 *create_ADXBaseTransientBottomBar_12_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$);
+
 @interface ADXBaseTransientBottomBar_SnackbarBaseLayout () {
  @public
   jint animationMode_;
@@ -225,7 +482,7 @@ __attribute__((unused)) static ADXBaseTransientBottomBar_Anchor *new_ADXBaseTran
 
 __attribute__((unused)) static ADXBaseTransientBottomBar_Anchor *create_ADXBaseTransientBottomBar_Anchor_initWithADXBaseTransientBottomBar_withADView_(ADXBaseTransientBottomBar *transientBottomBar, ADView *anchorView);
 
-@interface ADXBaseTransientBottomBar_4 : NSObject < ADHandler_Callback >
+@interface ADXBaseTransientBottomBar_13 : NSObject < ADHandler_Callback >
 
 - (instancetype)init;
 
@@ -233,13 +490,13 @@ __attribute__((unused)) static ADXBaseTransientBottomBar_Anchor *create_ADXBaseT
 
 @end
 
-J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_4)
+J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_13)
 
-__attribute__((unused)) static void ADXBaseTransientBottomBar_4_init(ADXBaseTransientBottomBar_4 *self);
+__attribute__((unused)) static void ADXBaseTransientBottomBar_13_init(ADXBaseTransientBottomBar_13 *self);
 
-__attribute__((unused)) static ADXBaseTransientBottomBar_4 *new_ADXBaseTransientBottomBar_4_init(void) NS_RETURNS_RETAINED;
+__attribute__((unused)) static ADXBaseTransientBottomBar_13 *new_ADXBaseTransientBottomBar_13_init(void) NS_RETURNS_RETAINED;
 
-__attribute__((unused)) static ADXBaseTransientBottomBar_4 *create_ADXBaseTransientBottomBar_4_init(void);
+__attribute__((unused)) static ADXBaseTransientBottomBar_13 *create_ADXBaseTransientBottomBar_13_init(void);
 
 @interface ADXBaseTransientBottomBar_Behavior () {
  @public
@@ -270,6 +527,11 @@ __attribute__((unused)) static ADXBaseTransientBottomBar_Behavior_1 *create_ADXB
 J2OBJC_INITIALIZED_DEFN(ADXBaseTransientBottomBar)
 
 ADHandler *ADXBaseTransientBottomBar_handler;
+id<ADTimeInterpolator> ADXBaseTransientBottomBar_LINEAR_INTERPOLATOR;
+id<ADTimeInterpolator> ADXBaseTransientBottomBar_FAST_OUT_SLOW_IN_INTERPOLATOR;
+id<ADTimeInterpolator> ADXBaseTransientBottomBar_FAST_OUT_LINEAR_IN_INTERPOLATOR;
+id<ADTimeInterpolator> ADXBaseTransientBottomBar_LINEAR_OUT_SLOW_IN_INTERPOLATOR;
+id<ADTimeInterpolator> ADXBaseTransientBottomBar_DECELERATE_INTERPOLATOR;
 
 @implementation ADXBaseTransientBottomBar
 
@@ -292,6 +554,15 @@ ADHandler *ADXBaseTransientBottomBar_handler;
 
 - (jint)getDuration {
   return duration_;
+}
+
+- (jint)getAnimationMode {
+  return [((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(view_)) getAnimationMode];
+}
+
+- (ADXBaseTransientBottomBar *)setAnimationModeWithInt:(jint)animationMode {
+  [((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(view_)) setAnimationModeWithInt:animationMode];
+  return self;
 }
 
 - (ADView *)getAnchorView {
@@ -338,6 +609,42 @@ ADHandler *ADXBaseTransientBottomBar_handler;
   return ADXBaseTransientBottomBar_calculateBottomMarginForAnchorView(self);
 }
 
+- (void)animateViewIn {
+  [((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(view_)) postWithJavaLangRunnable:create_ADXBaseTransientBottomBar_4_initWithADXBaseTransientBottomBar_(self)];
+}
+
+- (void)animateViewOutWithInt:(jint)event {
+  ADXBaseTransientBottomBar_animateViewOutWithInt_(self, event);
+}
+
+- (void)startFadeInAnimation {
+  ADXBaseTransientBottomBar_startFadeInAnimation(self);
+}
+
+- (void)startFadeOutAnimationWithInt:(jint)event {
+  ADXBaseTransientBottomBar_startFadeOutAnimationWithInt_(self, event);
+}
+
+- (ADValueAnimator *)getAlphaAnimatorWithFloatArray:(IOSFloatArray *)alphaValues {
+  return ADXBaseTransientBottomBar_getAlphaAnimatorWithFloatArray_(self, alphaValues);
+}
+
+- (ADValueAnimator *)getScaleAnimatorWithFloatArray:(IOSFloatArray *)scaleValues {
+  return ADXBaseTransientBottomBar_getScaleAnimatorWithFloatArray_(self, scaleValues);
+}
+
+- (void)startSlideInAnimation {
+  ADXBaseTransientBottomBar_startSlideInAnimation(self);
+}
+
+- (void)startSlideOutAnimationWithInt:(jint)event {
+  ADXBaseTransientBottomBar_startSlideOutAnimationWithInt_(self, event);
+}
+
+- (jint)getTranslationYBottom {
+  return ADXBaseTransientBottomBar_getTranslationYBottom(self);
+}
+
 - (void)hideViewWithInt:(jint)event {
   ADXBaseTransientBottomBar_hideViewWithInt_(self, event);
 }
@@ -353,14 +660,8 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
   return ASPluginInvoker_getScreenHeight();
 }
 
-- (void)animateViewIn {
-}
-
-- (void)animateViewOutWithInt:(jint)event {
-}
-
 - (jboolean)shouldAnimate {
-  return false;
+  return true;
 }
 
 - (void)onViewHiddenWithInt:(jint)event {
@@ -371,10 +672,18 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
   ADXBaseTransientBottomBar_onViewShown(self);
 }
 
+- (void)onChildViewsChangedWithADView:(ADView *)view {
+  ADXBaseTransientBottomBar_onChildViewsChangedWithADView_(self, view);
+}
+
 - (void)dealloc {
+  RELEASE_(animationFadeInterpolator_);
+  RELEASE_(animationSlideInterpolator_);
+  RELEASE_(animationScaleInterpolator_);
   RELEASE_(targetParent_);
   RELEASE_(context_);
   RELEASE_(view_);
+  RELEASE_(contentViewCallback_);
   RELEASE_(anchor_);
   RELEASE_(bottomMarginGestureInsetRunnable_);
   RELEASE_(behavior_);
@@ -389,25 +698,35 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
     { NULL, "Z", 0x2, -1, -1, -1, -1, -1, -1 },
     { NULL, "LADXBaseTransientBottomBar;", 0x1, 0, 1, -1, 2, -1, -1 },
     { NULL, "I", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "I", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "LADXBaseTransientBottomBar;", 0x1, 3, 1, -1, 2, -1, -1 },
     { NULL, "LADView;", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "V", 0x4, 3, 1, -1, -1, -1, -1 },
-    { NULL, "LADXBaseTransientBottomBar_SwipeDismissBehavior;", 0x4, -1, -1, -1, 4, -1, -1 },
+    { NULL, "V", 0x4, 4, 1, -1, -1, -1, -1 },
+    { NULL, "LADXBaseTransientBottomBar_SwipeDismissBehavior;", 0x4, -1, -1, -1, 5, -1, -1 },
     { NULL, "V", 0x10, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x2, -1, -1, -1, -1, -1, -1 },
     { NULL, "I", 0x2, -1, -1, -1, -1, -1, -1 },
-    { NULL, "V", 0x2, 5, 6, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 6, 7, -1, -1, -1, -1 },
     { NULL, "V", 0x2, -1, -1, -1, -1, -1, -1 },
     { NULL, "I", 0x2, -1, -1, -1, -1, -1, -1 },
-    { NULL, "V", 0x10, 7, 1, -1, -1, -1, -1 },
-    { NULL, NULL, 0x4, -1, 8, -1, -1, -1, -1 },
-    { NULL, "I", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, 9, 1, -1, -1, -1, -1 },
-    { NULL, "Z", 0x0, -1, -1, -1, -1, -1, -1 },
-    { NULL, "V", 0x2, 10, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x0, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 8, 1, -1, -1, -1, -1 },
     { NULL, "V", 0x2, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 9, 1, -1, -1, -1, -1 },
+    { NULL, "LADValueAnimator;", 0x82, 10, 11, -1, -1, -1, -1 },
+    { NULL, "LADValueAnimator;", 0x82, 12, 11, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 13, 1, -1, -1, -1, -1 },
+    { NULL, "I", 0x2, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x10, 14, 1, -1, -1, -1, -1 },
+    { NULL, NULL, 0x4, -1, 15, -1, -1, -1, -1 },
+    { NULL, "I", 0x1, -1, -1, -1, -1, -1, -1 },
+    { NULL, "Z", 0x0, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 16, 1, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, -1, -1, -1, -1, -1, -1 },
+    { NULL, "V", 0x2, 17, 18, -1, -1, -1, -1 },
   };
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
@@ -417,25 +736,35 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
   methods[2].selector = @selector(isSwipeDismissable);
   methods[3].selector = @selector(setDurationWithInt:);
   methods[4].selector = @selector(getDuration);
-  methods[5].selector = @selector(getAnchorView);
-  methods[6].selector = @selector(show);
-  methods[7].selector = @selector(dismiss);
-  methods[8].selector = @selector(dispatchDismissWithInt:);
-  methods[9].selector = @selector(getNewBehavior);
-  methods[10].selector = @selector(showView);
-  methods[11].selector = @selector(showViewImpl);
-  methods[12].selector = @selector(getViewAbsoluteBottom);
-  methods[13].selector = @selector(setUpBehaviorWithADXCoordinatorLayout_LayoutParams:);
-  methods[14].selector = @selector(recalculateAndUpdateMargins);
-  methods[15].selector = @selector(calculateBottomMarginForAnchorView);
-  methods[16].selector = @selector(hideViewWithInt:);
-  methods[17].selector = @selector(initWithADContext:withADViewGroup:withADXBaseTransientBottomBar_SnackbarBaseLayout:);
-  methods[18].selector = @selector(getScreenHeight);
-  methods[19].selector = @selector(animateViewIn);
-  methods[20].selector = @selector(animateViewOutWithInt:);
-  methods[21].selector = @selector(shouldAnimate);
-  methods[22].selector = @selector(onViewHiddenWithInt:);
-  methods[23].selector = @selector(onViewShown);
+  methods[5].selector = @selector(getAnimationMode);
+  methods[6].selector = @selector(setAnimationModeWithInt:);
+  methods[7].selector = @selector(getAnchorView);
+  methods[8].selector = @selector(show);
+  methods[9].selector = @selector(dismiss);
+  methods[10].selector = @selector(dispatchDismissWithInt:);
+  methods[11].selector = @selector(getNewBehavior);
+  methods[12].selector = @selector(showView);
+  methods[13].selector = @selector(showViewImpl);
+  methods[14].selector = @selector(getViewAbsoluteBottom);
+  methods[15].selector = @selector(setUpBehaviorWithADXCoordinatorLayout_LayoutParams:);
+  methods[16].selector = @selector(recalculateAndUpdateMargins);
+  methods[17].selector = @selector(calculateBottomMarginForAnchorView);
+  methods[18].selector = @selector(animateViewIn);
+  methods[19].selector = @selector(animateViewOutWithInt:);
+  methods[20].selector = @selector(startFadeInAnimation);
+  methods[21].selector = @selector(startFadeOutAnimationWithInt:);
+  methods[22].selector = @selector(getAlphaAnimatorWithFloatArray:);
+  methods[23].selector = @selector(getScaleAnimatorWithFloatArray:);
+  methods[24].selector = @selector(startSlideInAnimation);
+  methods[25].selector = @selector(startSlideOutAnimationWithInt:);
+  methods[26].selector = @selector(getTranslationYBottom);
+  methods[27].selector = @selector(hideViewWithInt:);
+  methods[28].selector = @selector(initWithADContext:withADViewGroup:withADXBaseTransientBottomBar_SnackbarBaseLayout:);
+  methods[29].selector = @selector(getScreenHeight);
+  methods[30].selector = @selector(shouldAnimate);
+  methods[31].selector = @selector(onViewHiddenWithInt:);
+  methods[32].selector = @selector(onViewShown);
+  methods[33].selector = @selector(onChildViewsChangedWithADView:);
   #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
     { "ANIMATION_MODE_SLIDE", "I", .constantValue.asInt = ADXBaseTransientBottomBar_ANIMATION_MODE_SLIDE, 0x19, -1, -1, -1, -1 },
@@ -447,17 +776,22 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
     { "DEFAULT_ANIMATION_FADE_DURATION", "I", .constantValue.asInt = ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_DURATION, 0x18, -1, -1, -1, -1 },
     { "DEFAULT_ANIMATION_FADE_IN_DURATION", "I", .constantValue.asInt = ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_IN_DURATION, 0x1a, -1, -1, -1, -1 },
     { "DEFAULT_ANIMATION_FADE_OUT_DURATION", "I", .constantValue.asInt = ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_OUT_DURATION, 0x1a, -1, -1, -1, -1 },
+    { "ANIMATION_SCALE_FROM_VALUE", "F", .constantValue.asFloat = ADXBaseTransientBottomBar_ANIMATION_SCALE_FROM_VALUE, 0x1a, -1, -1, -1, -1 },
     { "animationFadeInDuration_", "I", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
     { "animationFadeOutDuration_", "I", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
     { "animationSlideDuration_", "I", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
-    { "handler", "LADHandler;", .constantValue.asLong = 0, 0x18, -1, 11, -1, -1 },
+    { "animationFadeInterpolator_", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
+    { "animationSlideInterpolator_", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
+    { "animationScaleInterpolator_", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
+    { "handler", "LADHandler;", .constantValue.asLong = 0, 0x18, -1, 19, -1, -1 },
     { "MSG_SHOW", "I", .constantValue.asInt = ADXBaseTransientBottomBar_MSG_SHOW, 0x18, -1, -1, -1, -1 },
     { "MSG_DISMISS", "I", .constantValue.asInt = ADXBaseTransientBottomBar_MSG_DISMISS, 0x18, -1, -1, -1, -1 },
     { "USE_OFFSET_API", "Z", .constantValue.asBOOL = ADXBaseTransientBottomBar_USE_OFFSET_API, 0x1a, -1, -1, -1, -1 },
-    { "TAG", "LNSString;", .constantValue.asLong = 0, 0x1a, -1, 12, -1, -1 },
+    { "TAG", "LNSString;", .constantValue.asLong = 0, 0x1a, -1, 20, -1, -1 },
     { "targetParent_", "LADViewGroup;", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
     { "context_", "LADContext;", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
     { "view_", "LADXBaseTransientBottomBar_SnackbarBaseLayout;", .constantValue.asLong = 0, 0x14, -1, -1, -1, -1 },
+    { "contentViewCallback_", "LADXContentViewCallback;", .constantValue.asLong = 0, 0x12, -1, -1, -1, -1 },
     { "duration_", "I", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "gestureInsetBottomIgnored_", "Z", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "anchor_", "LADXBaseTransientBottomBar_Anchor;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
@@ -471,17 +805,33 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
     { "pendingShowingView_", "Z", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "behavior_", "LADXBaseTransientBottomBar_Behavior;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "managerCallback_", "LADXSnackbarManager_Callback;", .constantValue.asLong = 0, 0x0, -1, -1, -1, -1 },
+    { "LINEAR_INTERPOLATOR", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x19, -1, 21, -1, -1 },
+    { "FAST_OUT_SLOW_IN_INTERPOLATOR", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x19, -1, 22, -1, -1 },
+    { "FAST_OUT_LINEAR_IN_INTERPOLATOR", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x19, -1, 23, -1, -1 },
+    { "LINEAR_OUT_SLOW_IN_INTERPOLATOR", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x19, -1, 24, -1, -1 },
+    { "DECELERATE_INTERPOLATOR", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x19, -1, 25, -1, -1 },
+    { "DEFAULT_ANIMATION_FADE_INTERPOLATOR", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x1a, -1, 26, -1, -1 },
+    { "DEFAULT_ANIMATION_SCALE_INTERPOLATOR", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x1a, -1, 27, -1, -1 },
+    { "DEFAULT_ANIMATION_SLIDE_INTERPOLATOR", "LADTimeInterpolator;", .constantValue.asLong = 0, 0x1a, -1, 28, -1, -1 },
   };
-  static const void *ptrTable[] = { "setDuration", "I", "(I)TB;", "dispatchDismiss", "()Lcom/google/android/material/snackbar/BaseTransientBottomBar$SwipeDismissBehavior<+Lr/android/view/View;>;", "setUpBehavior", "LADXCoordinatorLayout_LayoutParams;", "hideView", "LADContext;LADViewGroup;LADXBaseTransientBottomBar_SnackbarBaseLayout;", "animateViewOut", "onViewHidden", &ADXBaseTransientBottomBar_handler, &ADXBaseTransientBottomBar_TAG, "LADXBaseTransientBottomBar_BaseCallback;LADXBaseTransientBottomBar_SnackbarBaseLayout;LADXBaseTransientBottomBar_Anchor;LADXBaseTransientBottomBar_Behavior;LADXBaseTransientBottomBar_SwipeDismissBehavior;", "<B:Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;>Ljava/lang/Object;" };
-  static const J2ObjcClassInfo _ADXBaseTransientBottomBar = { "BaseTransientBottomBar", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x401, 24, 33, -1, 13, -1, 14, -1 };
+  static const void *ptrTable[] = { "setDuration", "I", "(I)TB;", "setAnimationMode", "dispatchDismiss", "()Lcom/google/android/material/snackbar/BaseTransientBottomBar$SwipeDismissBehavior<+Lr/android/view/View;>;", "setUpBehavior", "LADXCoordinatorLayout_LayoutParams;", "animateViewOut", "startFadeOutAnimation", "getAlphaAnimator", "[F", "getScaleAnimator", "startSlideOutAnimation", "hideView", "LADContext;LADViewGroup;LADXBaseTransientBottomBar_SnackbarBaseLayout;", "onViewHidden", "onChildViewsChanged", "LADView;", &ADXBaseTransientBottomBar_handler, &ADXBaseTransientBottomBar_TAG, &ADXBaseTransientBottomBar_LINEAR_INTERPOLATOR, &ADXBaseTransientBottomBar_FAST_OUT_SLOW_IN_INTERPOLATOR, &ADXBaseTransientBottomBar_FAST_OUT_LINEAR_IN_INTERPOLATOR, &ADXBaseTransientBottomBar_LINEAR_OUT_SLOW_IN_INTERPOLATOR, &ADXBaseTransientBottomBar_DECELERATE_INTERPOLATOR, &ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_INTERPOLATOR, &ADXBaseTransientBottomBar_DEFAULT_ANIMATION_SCALE_INTERPOLATOR, &ADXBaseTransientBottomBar_DEFAULT_ANIMATION_SLIDE_INTERPOLATOR, "LADXBaseTransientBottomBar_BaseCallback;LADXBaseTransientBottomBar_SnackbarBaseLayout;LADXBaseTransientBottomBar_Anchor;LADXBaseTransientBottomBar_Behavior;LADXBaseTransientBottomBar_SwipeDismissBehavior;", "<B:Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;>Ljava/lang/Object;" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar = { "BaseTransientBottomBar", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x401, 34, 46, -1, 29, -1, 30, -1 };
   return &_ADXBaseTransientBottomBar;
 }
 
 + (void)initialize {
   if (self == [ADXBaseTransientBottomBar class]) {
     JreStrongAssign(&ADXBaseTransientBottomBar_TAG, [ADXBaseTransientBottomBar_class_() getSimpleName]);
+    JreStrongAssignAndConsume(&ADXBaseTransientBottomBar_LINEAR_INTERPOLATOR, new_ADLinearInterpolator_init());
+    JreStrongAssignAndConsume(&ADXBaseTransientBottomBar_FAST_OUT_SLOW_IN_INTERPOLATOR, new_ADXFastOutSlowInInterpolator_init());
+    JreStrongAssignAndConsume(&ADXBaseTransientBottomBar_FAST_OUT_LINEAR_IN_INTERPOLATOR, new_ADXFastOutLinearInInterpolator_init());
+    JreStrongAssignAndConsume(&ADXBaseTransientBottomBar_LINEAR_OUT_SLOW_IN_INTERPOLATOR, new_ADXLinearOutSlowInInterpolator_init());
+    JreStrongAssignAndConsume(&ADXBaseTransientBottomBar_DECELERATE_INTERPOLATOR, new_ADDecelerateInterpolator_init());
+    JreStrongAssign(&ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_INTERPOLATOR, ADXBaseTransientBottomBar_LINEAR_INTERPOLATOR);
+    JreStrongAssign(&ADXBaseTransientBottomBar_DEFAULT_ANIMATION_SCALE_INTERPOLATOR, ADXBaseTransientBottomBar_LINEAR_OUT_SLOW_IN_INTERPOLATOR);
+    JreStrongAssign(&ADXBaseTransientBottomBar_DEFAULT_ANIMATION_SLIDE_INTERPOLATOR, ADXBaseTransientBottomBar_FAST_OUT_SLOW_IN_INTERPOLATOR);
     {
-      JreStrongAssignAndConsume(&ADXBaseTransientBottomBar_handler, new_ADHandler_initWithADLooper_withADHandler_Callback_(ADLooper_getMainLooper(), create_ADXBaseTransientBottomBar_4_init()));
+      JreStrongAssignAndConsume(&ADXBaseTransientBottomBar_handler, new_ADHandler_initWithADLooper_withADHandler_Callback_(ADLooper_getMainLooper(), create_ADXBaseTransientBottomBar_13_init()));
     }
     J2OBJC_SET_INITIALIZED(ADXBaseTransientBottomBar)
   }
@@ -589,9 +939,82 @@ jint ADXBaseTransientBottomBar_calculateBottomMarginForAnchorView(ADXBaseTransie
   return targetParentAbsoluteYBottom - anchorViewAbsoluteYTop;
 }
 
+void ADXBaseTransientBottomBar_animateViewOutWithInt_(ADXBaseTransientBottomBar *self, jint event) {
+  if ([((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(self->view_)) getAnimationMode] == ADXBaseTransientBottomBar_ANIMATION_MODE_FADE) {
+    ADXBaseTransientBottomBar_startFadeOutAnimationWithInt_(self, event);
+  }
+  else {
+    ADXBaseTransientBottomBar_startSlideOutAnimationWithInt_(self, event);
+  }
+}
+
+void ADXBaseTransientBottomBar_startFadeInAnimation(ADXBaseTransientBottomBar *self) {
+  ADValueAnimator *alphaAnimator = ADXBaseTransientBottomBar_getAlphaAnimatorWithFloatArray_(self, [IOSFloatArray arrayWithFloats:(jfloat[]){ 0, 1 } count:2]);
+  ADValueAnimator *scaleAnimator = ADXBaseTransientBottomBar_getScaleAnimatorWithFloatArray_(self, [IOSFloatArray arrayWithFloats:(jfloat[]){ ADXBaseTransientBottomBar_ANIMATION_SCALE_FROM_VALUE, 1 } count:2]);
+  ADAnimatorSet *animatorSet = create_ADAnimatorSet_init();
+  [animatorSet playTogetherWithADAnimatorArray:[IOSObjectArray arrayWithObjects:(id[]){ alphaAnimator, scaleAnimator } count:2 type:ADAnimator_class_()]];
+  [animatorSet setDurationWithLong:self->animationFadeInDuration_];
+  [animatorSet addListenerWithADAnimator_AnimatorListener:create_ADXBaseTransientBottomBar_5_initWithADXBaseTransientBottomBar_(self)];
+  [animatorSet start];
+}
+
+void ADXBaseTransientBottomBar_startFadeOutAnimationWithInt_(ADXBaseTransientBottomBar *self, jint event) {
+  ADValueAnimator *animator = ADXBaseTransientBottomBar_getAlphaAnimatorWithFloatArray_(self, [IOSFloatArray arrayWithFloats:(jfloat[]){ 1, 0 } count:2]);
+  [((ADValueAnimator *) nil_chk(animator)) setDurationWithLong:self->animationFadeOutDuration_];
+  [animator addListenerWithADAnimator_AnimatorListener:create_ADXBaseTransientBottomBar_6_initWithADXBaseTransientBottomBar_withInt_(self, event)];
+  [animator start];
+}
+
+ADValueAnimator *ADXBaseTransientBottomBar_getAlphaAnimatorWithFloatArray_(ADXBaseTransientBottomBar *self, IOSFloatArray *alphaValues) {
+  ADValueAnimator *animator = ADValueAnimator_ofFloatWithFloatArray_(alphaValues);
+  [((ADValueAnimator *) nil_chk(animator)) setInterpolatorWithADTimeInterpolator:self->animationFadeInterpolator_];
+  [animator addUpdateListenerWithADValueAnimator_AnimatorUpdateListener:create_ADXBaseTransientBottomBar_7_initWithADXBaseTransientBottomBar_(self)];
+  return animator;
+}
+
+ADValueAnimator *ADXBaseTransientBottomBar_getScaleAnimatorWithFloatArray_(ADXBaseTransientBottomBar *self, IOSFloatArray *scaleValues) {
+  ADValueAnimator *animator = ADValueAnimator_ofFloatWithFloatArray_(scaleValues);
+  [((ADValueAnimator *) nil_chk(animator)) setInterpolatorWithADTimeInterpolator:self->animationScaleInterpolator_];
+  [animator addUpdateListenerWithADValueAnimator_AnimatorUpdateListener:create_ADXBaseTransientBottomBar_8_initWithADXBaseTransientBottomBar_(self)];
+  return animator;
+}
+
+void ADXBaseTransientBottomBar_startSlideInAnimation(ADXBaseTransientBottomBar *self) {
+  jint translationYBottom = ADXBaseTransientBottomBar_getTranslationYBottom(self);
+  {
+    ADXViewCompat_offsetTopAndBottomWithADView_withInt_(self->view_, translationYBottom);
+  }
+  ADValueAnimator *animator = create_ADValueAnimator_init();
+  [animator setIntValuesWithIntArray:[IOSIntArray arrayWithInts:(jint[]){ translationYBottom, 0 } count:2]];
+  [animator setInterpolatorWithADTimeInterpolator:self->animationSlideInterpolator_];
+  [animator setDurationWithLong:self->animationSlideDuration_];
+  [animator addListenerWithADAnimator_AnimatorListener:create_ADXBaseTransientBottomBar_9_initWithADXBaseTransientBottomBar_(self)];
+  [animator addUpdateListenerWithADValueAnimator_AnimatorUpdateListener:create_ADXBaseTransientBottomBar_10_initWithADXBaseTransientBottomBar_withInt_(self, translationYBottom)];
+  [animator start];
+}
+
+void ADXBaseTransientBottomBar_startSlideOutAnimationWithInt_(ADXBaseTransientBottomBar *self, jint event) {
+  ADValueAnimator *animator = create_ADValueAnimator_init();
+  [animator setIntValuesWithIntArray:[IOSIntArray arrayWithInts:(jint[]){ 0, ADXBaseTransientBottomBar_getTranslationYBottom(self) } count:2]];
+  [animator setInterpolatorWithADTimeInterpolator:self->animationSlideInterpolator_];
+  [animator setDurationWithLong:self->animationSlideDuration_];
+  [animator addListenerWithADAnimator_AnimatorListener:create_ADXBaseTransientBottomBar_11_initWithADXBaseTransientBottomBar_withInt_(self, event)];
+  [animator addUpdateListenerWithADValueAnimator_AnimatorUpdateListener:create_ADXBaseTransientBottomBar_12_initWithADXBaseTransientBottomBar_(self)];
+  [animator start];
+}
+
+jint ADXBaseTransientBottomBar_getTranslationYBottom(ADXBaseTransientBottomBar *self) {
+  jint translationY = [((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(self->view_)) getHeight];
+  ADViewGroup_LayoutParams *layoutParams = JreRetainedLocalValue([self->view_ getLayoutParams]);
+  if ([layoutParams isKindOfClass:[ADViewGroup_MarginLayoutParams class]]) {
+    translationY += ((ADViewGroup_MarginLayoutParams *) nil_chk(((ADViewGroup_MarginLayoutParams *) layoutParams)))->bottomMargin_;
+  }
+  return translationY;
+}
+
 void ADXBaseTransientBottomBar_hideViewWithInt_(ADXBaseTransientBottomBar *self, jint event) {
   if ([self shouldAnimate] && [((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(self->view_)) getVisibility] == ADView_VISIBLE) {
-    [self animateViewOutWithInt:event];
+    ADXBaseTransientBottomBar_animateViewOutWithInt_(self, event);
   }
   else {
     ADXBaseTransientBottomBar_onViewHiddenWithInt_(self, event);
@@ -609,9 +1032,13 @@ void ADXBaseTransientBottomBar_initWithADContext_withADViewGroup_withADXBaseTran
   JreStrongAssign(&self->view_, view);
   JreStrongAssign(&self->targetParent_, parent);
   JreStrongAssign(&self->context_, context);
-  self->animationFadeInDuration_ = 0;
-  self->animationFadeOutDuration_ = 0;
-  self->animationSlideDuration_ = 0;
+  self->animationFadeInDuration_ = ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_IN_DURATION;
+  self->animationFadeOutDuration_ = ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_OUT_DURATION;
+  self->animationSlideDuration_ = ADXBaseTransientBottomBar_DEFAULT_SLIDE_ANIMATION_DURATION;
+  JreStrongAssign(&self->animationFadeInterpolator_, ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_INTERPOLATOR);
+  JreStrongAssign(&self->animationSlideInterpolator_, ADXBaseTransientBottomBar_DEFAULT_ANIMATION_SLIDE_INTERPOLATOR);
+  JreStrongAssign(&self->animationScaleInterpolator_, ADXBaseTransientBottomBar_DEFAULT_ANIMATION_SCALE_INTERPOLATOR);
+  JreStrongAssign(&self->contentViewCallback_, (ADXSnackbarContentLayout *) cast_chk([((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(view)) getChildAtWithInt:0], [ADXSnackbarContentLayout class]));
 }
 
 void ADXBaseTransientBottomBar_onViewHiddenWithInt_(ADXBaseTransientBottomBar *self, jint event) {
@@ -633,6 +1060,16 @@ void ADXBaseTransientBottomBar_onViewShown(ADXBaseTransientBottomBar *self) {
   if (self->view_ != nil) {
     [self->view_ requestLayout];
     [self->view_ remeasure];
+  }
+}
+
+void ADXBaseTransientBottomBar_onChildViewsChangedWithADView_(ADXBaseTransientBottomBar *self, ADView *view) {
+  ADView *parent = (ADView *) cast_chk([((ADView *) nil_chk(view)) getParent], [ADView class]);
+  while (parent != nil) {
+    if ([parent isKindOfClass:[ADXCoordinatorLayout class]]) {
+      [((ADXCoordinatorLayout *) parent) onChildViewsChangedWithInt:0];
+    }
+    parent = (ADView *) cast_chk([parent getParent], [ADView class]);
   }
 }
 
@@ -896,6 +1333,502 @@ ADXBaseTransientBottomBar_3 *create_ADXBaseTransientBottomBar_3_initWithADXBaseT
   J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_3, initWithADXBaseTransientBottomBar_, outer$)
 }
 
+@implementation ADXBaseTransientBottomBar_4
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$ {
+  ADXBaseTransientBottomBar_4_initWithADXBaseTransientBottomBar_(self, outer$);
+  return self;
+}
+
+- (void)run {
+  if (this$0_->view_ == nil) {
+    return;
+  }
+  if ([this$0_->view_ getParent] != nil) {
+    [this$0_->view_ setVisibilityWithInt:ADView_VISIBLE];
+  }
+  if ([this$0_->view_ getAnimationMode] == ADXBaseTransientBottomBar_ANIMATION_MODE_FADE) {
+    ADXBaseTransientBottomBar_startFadeInAnimation(this$0_);
+  }
+  else {
+    ADXBaseTransientBottomBar_startSlideInAnimation(this$0_);
+  }
+}
+
+- (void)dealloc {
+  RELEASE_(this$0_);
+  [super dealloc];
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x0, -1, 0, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
+  };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  #pragma clang diagnostic ignored "-Wundeclared-selector"
+  methods[0].selector = @selector(initWithADXBaseTransientBottomBar:);
+  methods[1].selector = @selector(run);
+  #pragma clang diagnostic pop
+  static const J2ObjcFieldInfo fields[] = {
+    { "this$0_", "LADXBaseTransientBottomBar;", .constantValue.asLong = 0, 0x1012, -1, -1, 1, -1 },
+  };
+  static const void *ptrTable[] = { "LADXBaseTransientBottomBar;", "Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;", "animateViewIn" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_4 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 2, 1, 0, -1, 2, -1, -1 };
+  return &_ADXBaseTransientBottomBar_4;
+}
+
+@end
+
+void ADXBaseTransientBottomBar_4_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_4 *self, ADXBaseTransientBottomBar *outer$) {
+  JreStrongAssign(&self->this$0_, outer$);
+  NSObject_init(self);
+}
+
+ADXBaseTransientBottomBar_4 *new_ADXBaseTransientBottomBar_4_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_4, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+ADXBaseTransientBottomBar_4 *create_ADXBaseTransientBottomBar_4_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_4, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+@implementation ADXBaseTransientBottomBar_5
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$ {
+  ADXBaseTransientBottomBar_5_initWithADXBaseTransientBottomBar_(self, outer$);
+  return self;
+}
+
+- (void)onAnimationEndWithADAnimator:(ADAnimator *)animator {
+  ADXBaseTransientBottomBar_onViewShown(this$0_);
+}
+
+- (void)dealloc {
+  RELEASE_(this$0_);
+  [super dealloc];
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x0, -1, 0, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 1, 2, -1, -1, -1, -1 },
+  };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  #pragma clang diagnostic ignored "-Wundeclared-selector"
+  methods[0].selector = @selector(initWithADXBaseTransientBottomBar:);
+  methods[1].selector = @selector(onAnimationEndWithADAnimator:);
+  #pragma clang diagnostic pop
+  static const J2ObjcFieldInfo fields[] = {
+    { "this$0_", "LADXBaseTransientBottomBar;", .constantValue.asLong = 0, 0x1012, -1, -1, 3, -1 },
+  };
+  static const void *ptrTable[] = { "LADXBaseTransientBottomBar;", "onAnimationEnd", "LADAnimator;", "Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;", "startFadeInAnimation" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_5 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 2, 1, 0, -1, 4, -1, -1 };
+  return &_ADXBaseTransientBottomBar_5;
+}
+
+@end
+
+void ADXBaseTransientBottomBar_5_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_5 *self, ADXBaseTransientBottomBar *outer$) {
+  JreStrongAssign(&self->this$0_, outer$);
+  ADAnimatorListenerAdapter_init(self);
+}
+
+ADXBaseTransientBottomBar_5 *new_ADXBaseTransientBottomBar_5_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_5, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+ADXBaseTransientBottomBar_5 *create_ADXBaseTransientBottomBar_5_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_5, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+@implementation ADXBaseTransientBottomBar_6
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$
+                                          withInt:(jint)capture$0 {
+  ADXBaseTransientBottomBar_6_initWithADXBaseTransientBottomBar_withInt_(self, outer$, capture$0);
+  return self;
+}
+
+- (void)onAnimationEndWithADAnimator:(ADAnimator *)animator {
+  ADXBaseTransientBottomBar_onViewHiddenWithInt_(this$0_, val$event_);
+}
+
+- (void)dealloc {
+  RELEASE_(this$0_);
+  [super dealloc];
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x0, -1, 0, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 1, 2, -1, -1, -1, -1 },
+  };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  #pragma clang diagnostic ignored "-Wundeclared-selector"
+  methods[0].selector = @selector(initWithADXBaseTransientBottomBar:withInt:);
+  methods[1].selector = @selector(onAnimationEndWithADAnimator:);
+  #pragma clang diagnostic pop
+  static const J2ObjcFieldInfo fields[] = {
+    { "this$0_", "LADXBaseTransientBottomBar;", .constantValue.asLong = 0, 0x1012, -1, -1, 3, -1 },
+    { "val$event_", "I", .constantValue.asLong = 0, 0x1012, -1, -1, -1, -1 },
+  };
+  static const void *ptrTable[] = { "LADXBaseTransientBottomBar;I", "onAnimationEnd", "LADAnimator;", "Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;", "LADXBaseTransientBottomBar;", "startFadeOutAnimationWithInt:" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_6 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 2, 2, 4, -1, 5, -1, -1 };
+  return &_ADXBaseTransientBottomBar_6;
+}
+
+@end
+
+void ADXBaseTransientBottomBar_6_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar_6 *self, ADXBaseTransientBottomBar *outer$, jint capture$0) {
+  JreStrongAssign(&self->this$0_, outer$);
+  self->val$event_ = capture$0;
+  ADAnimatorListenerAdapter_init(self);
+}
+
+ADXBaseTransientBottomBar_6 *new_ADXBaseTransientBottomBar_6_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0) {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_6, initWithADXBaseTransientBottomBar_withInt_, outer$, capture$0)
+}
+
+ADXBaseTransientBottomBar_6 *create_ADXBaseTransientBottomBar_6_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0) {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_6, initWithADXBaseTransientBottomBar_withInt_, outer$, capture$0)
+}
+
+@implementation ADXBaseTransientBottomBar_7
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$ {
+  ADXBaseTransientBottomBar_7_initWithADXBaseTransientBottomBar_(self, outer$);
+  return self;
+}
+
+- (void)onAnimationUpdateWithADValueAnimator:(ADValueAnimator *)valueAnimator {
+  [((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(this$0_->view_)) setAlphaWithFloat:[((JavaLangFloat *) nil_chk((JavaLangFloat *) cast_chk([((ADValueAnimator *) nil_chk(valueAnimator)) getAnimatedValue], [JavaLangFloat class]))) floatValue]];
+}
+
+- (void)dealloc {
+  RELEASE_(this$0_);
+  [super dealloc];
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x0, -1, 0, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 1, 2, -1, -1, -1, -1 },
+  };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  #pragma clang diagnostic ignored "-Wundeclared-selector"
+  methods[0].selector = @selector(initWithADXBaseTransientBottomBar:);
+  methods[1].selector = @selector(onAnimationUpdateWithADValueAnimator:);
+  #pragma clang diagnostic pop
+  static const J2ObjcFieldInfo fields[] = {
+    { "this$0_", "LADXBaseTransientBottomBar;", .constantValue.asLong = 0, 0x1012, -1, -1, 3, -1 },
+  };
+  static const void *ptrTable[] = { "LADXBaseTransientBottomBar;", "onAnimationUpdate", "LADValueAnimator;", "Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;", "getAlphaAnimatorWithFloatArray:" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_7 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 2, 1, 0, -1, 4, -1, -1 };
+  return &_ADXBaseTransientBottomBar_7;
+}
+
+@end
+
+void ADXBaseTransientBottomBar_7_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_7 *self, ADXBaseTransientBottomBar *outer$) {
+  JreStrongAssign(&self->this$0_, outer$);
+  NSObject_init(self);
+}
+
+ADXBaseTransientBottomBar_7 *new_ADXBaseTransientBottomBar_7_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_7, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+ADXBaseTransientBottomBar_7 *create_ADXBaseTransientBottomBar_7_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_7, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+@implementation ADXBaseTransientBottomBar_8
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$ {
+  ADXBaseTransientBottomBar_8_initWithADXBaseTransientBottomBar_(self, outer$);
+  return self;
+}
+
+- (void)onAnimationUpdateWithADValueAnimator:(ADValueAnimator *)valueAnimator {
+  jfloat scale_ = [((JavaLangFloat *) nil_chk((JavaLangFloat *) cast_chk([((ADValueAnimator *) nil_chk(valueAnimator)) getAnimatedValue], [JavaLangFloat class]))) floatValue];
+  [((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(this$0_->view_)) setScaleXWithFloat:scale_];
+  [this$0_->view_ setScaleYWithFloat:scale_];
+}
+
+- (void)dealloc {
+  RELEASE_(this$0_);
+  [super dealloc];
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x0, -1, 0, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 1, 2, -1, -1, -1, -1 },
+  };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  #pragma clang diagnostic ignored "-Wundeclared-selector"
+  methods[0].selector = @selector(initWithADXBaseTransientBottomBar:);
+  methods[1].selector = @selector(onAnimationUpdateWithADValueAnimator:);
+  #pragma clang diagnostic pop
+  static const J2ObjcFieldInfo fields[] = {
+    { "this$0_", "LADXBaseTransientBottomBar;", .constantValue.asLong = 0, 0x1012, -1, -1, 3, -1 },
+  };
+  static const void *ptrTable[] = { "LADXBaseTransientBottomBar;", "onAnimationUpdate", "LADValueAnimator;", "Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;", "getScaleAnimatorWithFloatArray:" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_8 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 2, 1, 0, -1, 4, -1, -1 };
+  return &_ADXBaseTransientBottomBar_8;
+}
+
+@end
+
+void ADXBaseTransientBottomBar_8_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_8 *self, ADXBaseTransientBottomBar *outer$) {
+  JreStrongAssign(&self->this$0_, outer$);
+  NSObject_init(self);
+}
+
+ADXBaseTransientBottomBar_8 *new_ADXBaseTransientBottomBar_8_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_8, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+ADXBaseTransientBottomBar_8 *create_ADXBaseTransientBottomBar_8_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_8, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+@implementation ADXBaseTransientBottomBar_9
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$ {
+  ADXBaseTransientBottomBar_9_initWithADXBaseTransientBottomBar_(self, outer$);
+  return self;
+}
+
+- (void)onAnimationStartWithADAnimator:(ADAnimator *)animator {
+  [((id<ADXContentViewCallback>) nil_chk(this$0_->contentViewCallback_)) animateContentInWithInt:this$0_->animationSlideDuration_ - this$0_->animationFadeInDuration_ withInt:this$0_->animationFadeInDuration_];
+}
+
+- (void)onAnimationEndWithADAnimator:(ADAnimator *)animator {
+  ADXBaseTransientBottomBar_onViewShown(this$0_);
+}
+
+- (void)dealloc {
+  RELEASE_(this$0_);
+  [super dealloc];
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x0, -1, 0, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 1, 2, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 3, 2, -1, -1, -1, -1 },
+  };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  #pragma clang diagnostic ignored "-Wundeclared-selector"
+  methods[0].selector = @selector(initWithADXBaseTransientBottomBar:);
+  methods[1].selector = @selector(onAnimationStartWithADAnimator:);
+  methods[2].selector = @selector(onAnimationEndWithADAnimator:);
+  #pragma clang diagnostic pop
+  static const J2ObjcFieldInfo fields[] = {
+    { "this$0_", "LADXBaseTransientBottomBar;", .constantValue.asLong = 0, 0x1012, -1, -1, 4, -1 },
+  };
+  static const void *ptrTable[] = { "LADXBaseTransientBottomBar;", "onAnimationStart", "LADAnimator;", "onAnimationEnd", "Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;", "startSlideInAnimation" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_9 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 3, 1, 0, -1, 5, -1, -1 };
+  return &_ADXBaseTransientBottomBar_9;
+}
+
+@end
+
+void ADXBaseTransientBottomBar_9_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_9 *self, ADXBaseTransientBottomBar *outer$) {
+  JreStrongAssign(&self->this$0_, outer$);
+  ADAnimatorListenerAdapter_init(self);
+}
+
+ADXBaseTransientBottomBar_9 *new_ADXBaseTransientBottomBar_9_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_9, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+ADXBaseTransientBottomBar_9 *create_ADXBaseTransientBottomBar_9_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_9, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+@implementation ADXBaseTransientBottomBar_10
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$
+                                          withInt:(jint)capture$0 {
+  ADXBaseTransientBottomBar_10_initWithADXBaseTransientBottomBar_withInt_(self, outer$, capture$0);
+  return self;
+}
+
+- (void)onAnimationUpdateWithADValueAnimator:(ADValueAnimator *)animator {
+  jint currentAnimatedIntValue = [((JavaLangInteger *) nil_chk((JavaLangInteger *) cast_chk([((ADValueAnimator *) nil_chk(animator)) getAnimatedValue], [JavaLangInteger class]))) intValue];
+  {
+    ADXViewCompat_offsetTopAndBottomWithADView_withInt_(this$0_->view_, currentAnimatedIntValue - previousAnimatedIntValue_);
+  }
+  previousAnimatedIntValue_ = currentAnimatedIntValue;
+  ADXBaseTransientBottomBar_onChildViewsChangedWithADView_(this$0_, this$0_->view_);
+}
+
+- (void)dealloc {
+  RELEASE_(this$0_);
+  [super dealloc];
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x0, -1, 0, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 1, 2, -1, -1, -1, -1 },
+  };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  #pragma clang diagnostic ignored "-Wundeclared-selector"
+  methods[0].selector = @selector(initWithADXBaseTransientBottomBar:withInt:);
+  methods[1].selector = @selector(onAnimationUpdateWithADValueAnimator:);
+  #pragma clang diagnostic pop
+  static const J2ObjcFieldInfo fields[] = {
+    { "this$0_", "LADXBaseTransientBottomBar;", .constantValue.asLong = 0, 0x1012, -1, -1, 3, -1 },
+    { "previousAnimatedIntValue_", "I", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+  };
+  static const void *ptrTable[] = { "LADXBaseTransientBottomBar;I", "onAnimationUpdate", "LADValueAnimator;", "Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;", "LADXBaseTransientBottomBar;", "startSlideInAnimation" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_10 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 2, 2, 4, -1, 5, -1, -1 };
+  return &_ADXBaseTransientBottomBar_10;
+}
+
+@end
+
+void ADXBaseTransientBottomBar_10_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar_10 *self, ADXBaseTransientBottomBar *outer$, jint capture$0) {
+  JreStrongAssign(&self->this$0_, outer$);
+  NSObject_init(self);
+  self->previousAnimatedIntValue_ = capture$0;
+}
+
+ADXBaseTransientBottomBar_10 *new_ADXBaseTransientBottomBar_10_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0) {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_10, initWithADXBaseTransientBottomBar_withInt_, outer$, capture$0)
+}
+
+ADXBaseTransientBottomBar_10 *create_ADXBaseTransientBottomBar_10_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0) {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_10, initWithADXBaseTransientBottomBar_withInt_, outer$, capture$0)
+}
+
+@implementation ADXBaseTransientBottomBar_11
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$
+                                          withInt:(jint)capture$0 {
+  ADXBaseTransientBottomBar_11_initWithADXBaseTransientBottomBar_withInt_(self, outer$, capture$0);
+  return self;
+}
+
+- (void)onAnimationStartWithADAnimator:(ADAnimator *)animator {
+  [((id<ADXContentViewCallback>) nil_chk(this$0_->contentViewCallback_)) animateContentOutWithInt:0 withInt:this$0_->animationFadeOutDuration_];
+}
+
+- (void)onAnimationEndWithADAnimator:(ADAnimator *)animator {
+  ADXBaseTransientBottomBar_onViewHiddenWithInt_(this$0_, val$event_);
+}
+
+- (void)dealloc {
+  RELEASE_(this$0_);
+  [super dealloc];
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x0, -1, 0, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 1, 2, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 3, 2, -1, -1, -1, -1 },
+  };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  #pragma clang diagnostic ignored "-Wundeclared-selector"
+  methods[0].selector = @selector(initWithADXBaseTransientBottomBar:withInt:);
+  methods[1].selector = @selector(onAnimationStartWithADAnimator:);
+  methods[2].selector = @selector(onAnimationEndWithADAnimator:);
+  #pragma clang diagnostic pop
+  static const J2ObjcFieldInfo fields[] = {
+    { "this$0_", "LADXBaseTransientBottomBar;", .constantValue.asLong = 0, 0x1012, -1, -1, 4, -1 },
+    { "val$event_", "I", .constantValue.asLong = 0, 0x1012, -1, -1, -1, -1 },
+  };
+  static const void *ptrTable[] = { "LADXBaseTransientBottomBar;I", "onAnimationStart", "LADAnimator;", "onAnimationEnd", "Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;", "LADXBaseTransientBottomBar;", "startSlideOutAnimationWithInt:" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_11 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 3, 2, 5, -1, 6, -1, -1 };
+  return &_ADXBaseTransientBottomBar_11;
+}
+
+@end
+
+void ADXBaseTransientBottomBar_11_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar_11 *self, ADXBaseTransientBottomBar *outer$, jint capture$0) {
+  JreStrongAssign(&self->this$0_, outer$);
+  self->val$event_ = capture$0;
+  ADAnimatorListenerAdapter_init(self);
+}
+
+ADXBaseTransientBottomBar_11 *new_ADXBaseTransientBottomBar_11_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0) {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_11, initWithADXBaseTransientBottomBar_withInt_, outer$, capture$0)
+}
+
+ADXBaseTransientBottomBar_11 *create_ADXBaseTransientBottomBar_11_initWithADXBaseTransientBottomBar_withInt_(ADXBaseTransientBottomBar *outer$, jint capture$0) {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_11, initWithADXBaseTransientBottomBar_withInt_, outer$, capture$0)
+}
+
+@implementation ADXBaseTransientBottomBar_12
+
+- (instancetype)initWithADXBaseTransientBottomBar:(ADXBaseTransientBottomBar *)outer$ {
+  ADXBaseTransientBottomBar_12_initWithADXBaseTransientBottomBar_(self, outer$);
+  return self;
+}
+
+- (void)onAnimationUpdateWithADValueAnimator:(ADValueAnimator *)animator {
+  jint currentAnimatedIntValue = [((JavaLangInteger *) nil_chk((JavaLangInteger *) cast_chk([((ADValueAnimator *) nil_chk(animator)) getAnimatedValue], [JavaLangInteger class]))) intValue];
+  {
+    ADXViewCompat_offsetTopAndBottomWithADView_withInt_(this$0_->view_, currentAnimatedIntValue - previousAnimatedIntValue_);
+  }
+  previousAnimatedIntValue_ = currentAnimatedIntValue;
+  ADXBaseTransientBottomBar_onChildViewsChangedWithADView_(this$0_, this$0_->view_);
+}
+
+- (void)dealloc {
+  RELEASE_(this$0_);
+  [super dealloc];
+}
+
++ (const J2ObjcClassInfo *)__metadata {
+  static J2ObjcMethodInfo methods[] = {
+    { NULL, NULL, 0x0, -1, 0, -1, -1, -1, -1 },
+    { NULL, "V", 0x1, 1, 2, -1, -1, -1, -1 },
+  };
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
+  #pragma clang diagnostic ignored "-Wundeclared-selector"
+  methods[0].selector = @selector(initWithADXBaseTransientBottomBar:);
+  methods[1].selector = @selector(onAnimationUpdateWithADValueAnimator:);
+  #pragma clang diagnostic pop
+  static const J2ObjcFieldInfo fields[] = {
+    { "this$0_", "LADXBaseTransientBottomBar;", .constantValue.asLong = 0, 0x1012, -1, -1, 3, -1 },
+    { "previousAnimatedIntValue_", "I", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
+  };
+  static const void *ptrTable[] = { "LADXBaseTransientBottomBar;", "onAnimationUpdate", "LADValueAnimator;", "Lcom/google/android/material/snackbar/BaseTransientBottomBar<TB;>;", "startSlideOutAnimationWithInt:" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_12 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 2, 2, 0, -1, 4, -1, -1 };
+  return &_ADXBaseTransientBottomBar_12;
+}
+
+@end
+
+void ADXBaseTransientBottomBar_12_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar_12 *self, ADXBaseTransientBottomBar *outer$) {
+  JreStrongAssign(&self->this$0_, outer$);
+  NSObject_init(self);
+  self->previousAnimatedIntValue_ = 0;
+}
+
+ADXBaseTransientBottomBar_12 *new_ADXBaseTransientBottomBar_12_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_12, initWithADXBaseTransientBottomBar_, outer$)
+}
+
+ADXBaseTransientBottomBar_12 *create_ADXBaseTransientBottomBar_12_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$) {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_12, initWithADXBaseTransientBottomBar_, outer$)
+}
+
 @implementation ADXBaseTransientBottomBar_SnackbarBaseLayout
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
@@ -908,6 +1841,14 @@ J2OBJC_IGNORE_DESIGNATED_END
 - (void)onMeasureWithInt:(jint)widthMeasureSpec
                  withInt:(jint)heightMeasureSpec {
   [super onMeasureWithInt:widthMeasureSpec withInt:heightMeasureSpec];
+}
+
+- (jint)getAnimationMode {
+  return animationMode_;
+}
+
+- (void)setAnimationModeWithInt:(jint)animationMode {
+  self->animationMode_ = animationMode;
 }
 
 - (void)addToTargetParentWithADViewGroup:(ADViewGroup *)targetParent {
@@ -925,24 +1866,28 @@ J2OBJC_IGNORE_DESIGNATED_END
   static J2ObjcMethodInfo methods[] = {
     { NULL, NULL, 0x4, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x4, 0, 1, -1, -1, -1, -1 },
+    { NULL, "I", 0x0, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x0, 2, 3, -1, -1, -1, -1 },
+    { NULL, "V", 0x0, 4, 5, -1, -1, -1, -1 },
   };
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
   #pragma clang diagnostic ignored "-Wundeclared-selector"
   methods[0].selector = @selector(init);
   methods[1].selector = @selector(onMeasureWithInt:withInt:);
-  methods[2].selector = @selector(addToTargetParentWithADViewGroup:);
+  methods[2].selector = @selector(getAnimationMode);
+  methods[3].selector = @selector(setAnimationModeWithInt:);
+  methods[4].selector = @selector(addToTargetParentWithADViewGroup:);
   #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
     { "animationMode_", "I", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "maxWidth", "I", .constantValue.asInt = ADXBaseTransientBottomBar_SnackbarBaseLayout_maxWidth, 0x12, 4, -1, -1, -1 },
-    { "maxInlineActionWidth", "I", .constantValue.asInt = ADXBaseTransientBottomBar_SnackbarBaseLayout_maxInlineActionWidth, 0x12, 5, -1, -1, -1 },
+    { "maxWidth", "I", .constantValue.asInt = ADXBaseTransientBottomBar_SnackbarBaseLayout_maxWidth, 0x12, 6, -1, -1, -1 },
+    { "maxInlineActionWidth", "I", .constantValue.asInt = ADXBaseTransientBottomBar_SnackbarBaseLayout_maxInlineActionWidth, 0x12, 7, -1, -1, -1 },
     { "originalMargins_", "LADRect;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
     { "addingToTargetParent_", "Z", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
   };
-  static const void *ptrTable[] = { "onMeasure", "II", "addToTargetParent", "LADViewGroup;", "maxWidth", "maxInlineActionWidth", "LADXBaseTransientBottomBar;" };
-  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_SnackbarBaseLayout = { "SnackbarBaseLayout", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0xc, 3, 5, 6, -1, -1, -1, -1 };
+  static const void *ptrTable[] = { "onMeasure", "II", "setAnimationMode", "I", "addToTargetParent", "LADViewGroup;", "maxWidth", "maxInlineActionWidth", "LADXBaseTransientBottomBar;" };
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_SnackbarBaseLayout = { "SnackbarBaseLayout", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0xc, 5, 5, 8, -1, -1, -1, -1 };
   return &_ADXBaseTransientBottomBar_SnackbarBaseLayout;
 }
 
@@ -1018,11 +1963,11 @@ ADXBaseTransientBottomBar_Anchor *create_ADXBaseTransientBottomBar_Anchor_initWi
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ADXBaseTransientBottomBar_Anchor)
 
-@implementation ADXBaseTransientBottomBar_4
+@implementation ADXBaseTransientBottomBar_13
 
 J2OBJC_IGNORE_DESIGNATED_BEGIN
 - (instancetype)init {
-  ADXBaseTransientBottomBar_4_init(self);
+  ADXBaseTransientBottomBar_13_init(self);
   return self;
 }
 J2OBJC_IGNORE_DESIGNATED_END
@@ -1052,22 +1997,22 @@ J2OBJC_IGNORE_DESIGNATED_END
   methods[1].selector = @selector(handleMessageWithADMessage:);
   #pragma clang diagnostic pop
   static const void *ptrTable[] = { "handleMessage", "LADMessage;", "LADXBaseTransientBottomBar;" };
-  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_4 = { "", "com.google.android.material.snackbar", ptrTable, methods, NULL, 7, 0x8018, 2, 0, 2, -1, -1, -1, -1 };
-  return &_ADXBaseTransientBottomBar_4;
+  static const J2ObjcClassInfo _ADXBaseTransientBottomBar_13 = { "", "com.google.android.material.snackbar", ptrTable, methods, NULL, 7, 0x8018, 2, 0, 2, -1, -1, -1, -1 };
+  return &_ADXBaseTransientBottomBar_13;
 }
 
 @end
 
-void ADXBaseTransientBottomBar_4_init(ADXBaseTransientBottomBar_4 *self) {
+void ADXBaseTransientBottomBar_13_init(ADXBaseTransientBottomBar_13 *self) {
   NSObject_init(self);
 }
 
-ADXBaseTransientBottomBar_4 *new_ADXBaseTransientBottomBar_4_init() {
-  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_4, init)
+ADXBaseTransientBottomBar_13 *new_ADXBaseTransientBottomBar_13_init() {
+  J2OBJC_NEW_IMPL(ADXBaseTransientBottomBar_13, init)
 }
 
-ADXBaseTransientBottomBar_4 *create_ADXBaseTransientBottomBar_4_init() {
-  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_4, init)
+ADXBaseTransientBottomBar_13 *create_ADXBaseTransientBottomBar_13_init() {
+  J2OBJC_CREATE_IMPL(ADXBaseTransientBottomBar_13, init)
 }
 
 @implementation ADXBaseTransientBottomBar_SwipeDismissBehavior

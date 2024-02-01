@@ -319,6 +319,10 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setAlphaWithFloat:(jfloat)arg0;
 
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setAnimateLayoutChangesWithBoolean:(jboolean)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setAnimateParentHierarchyWithBoolean:(jboolean)arg0;
+
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setAsDragSourceWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setAttributeUnderTestWithNSString:(NSString *)arg0;
@@ -330,6 +334,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setBackgroundTintWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setBackgroundWithNSString:(NSString *)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setBottomWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setChildXmlWithNSString:(NSString *)arg0;
 
@@ -437,6 +443,12 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setLayoutModeWithNSString:(NSString *)arg0;
 
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setLayoutTransitionDurationWithInt:(jint)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setLayoutTransitionWithNSString:(NSString *)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setLeftWithNSString:(NSString *)arg0;
+
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setListitemWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setLongClickableWithBoolean:(jboolean)arg0;
@@ -511,6 +523,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setPaddingWithNSString:(NSString *)arg0;
 
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setRightWithNSString:(NSString *)arg0;
+
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setRotationWithFloat:(jfloat)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setRotationXWithFloat:(jfloat)arg0;
@@ -528,6 +542,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setTextAlignmentWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setTextDirectionWithNSString:(NSString *)arg0;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setTopWithNSString:(NSString *)arg0;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)setTransformPivotXWithNSString:(NSString *)arg0;
 
@@ -572,6 +588,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetBackgroundTint;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetBackgroundTintMode;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetBottom;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetClickable;
 
@@ -659,6 +677,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetLayoutMode;
 
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetLeft;
+
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetLongClickable;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetMaxHeight;
@@ -693,6 +713,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetPaddingTop;
 
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetRight;
+
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetRotation;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetRotationX;
@@ -708,6 +730,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetTextAlignment;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetTextDirection;
+
+- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetTop;
 
 - (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)tryGetTransformPivotX;
 

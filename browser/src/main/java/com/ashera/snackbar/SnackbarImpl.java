@@ -68,7 +68,9 @@ public class SnackbarImpl extends BaseWidget {
 	public class ViewExt extends View{
 		@Override
 		public void remeasure() {
-			getFragment().remeasure();
+			if (getFragment() != null) {
+				getFragment().remeasure();
+			}
 		}
         private Map<String, IWidget> templates;
     	@Override
@@ -310,6 +312,7 @@ public java.util.Map<String, Object> getOnClickEventObj(View v) {
 			
 			setBackgroundAttributes();
 			
+			snackbar.dismiss();
 			snackbar.show();
 		} else {
 			if (snackbar != null) {

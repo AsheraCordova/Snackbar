@@ -32,6 +32,8 @@
      <!-- start AndroidJSnackbar -->
      <header-file src="library/AndroidJSnackbar/src/BaseTransientBottomBar.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
      <source-file src="library/AndroidJSnackbar/src/BaseTransientBottomBar.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
+     <header-file src="library/AndroidJSnackbar/src/ContentViewCallback.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
+     <source-file src="library/AndroidJSnackbar/src/ContentViewCallback.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
      <header-file src="library/AndroidJSnackbar/src/Snackbar.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
      <source-file src="library/AndroidJSnackbar/src/Snackbar.m" target-dir="Snackbar/AndroidJSnackbar/src" compiler-flags="-fno-objc-arc"/>
      <header-file src="library/AndroidJSnackbar/src/SnackbarContentLayout.h" target-dir="Snackbar/AndroidJSnackbar/src"/>
