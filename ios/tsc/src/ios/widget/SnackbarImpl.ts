@@ -13,6 +13,7 @@ import {MotionEvent} from '../../app/MotionEvent';
 import {DragEvent} from '../../app/DragEvent';
 import {KeyEvent} from '../../app/KeyEvent';
 import { ScopedObject } from '../../app/ScopedObject';
+import { Mixin, decorate } from 'ts-mixer';
 
 
 
@@ -31,35 +32,35 @@ export abstract class SnackbarImpl<T> extends ViewImpl<T>{
 	//start - body
 	static initialize() {
     }	
-	@Type(() => CommandAttr)
-	@Expose({ name: "duration" })
+	@decorate(Type(() => CommandAttr))
+	@decorate(Expose({ name: "duration" }))
 	duration!:CommandAttr<number>| undefined;
-	@Type(() => CommandAttr)
-	@Expose({ name: "text" })
+	@decorate(Type(() => CommandAttr))
+	@decorate(Expose({ name: "text" }))
 	text!:CommandAttr<string>| undefined;
-	@Type(() => CommandAttr)
-	@Expose({ name: "show" })
+	@decorate(Type(() => CommandAttr))
+	@decorate(Expose({ name: "show" }))
 	show_!:CommandAttr<boolean>| undefined;
-	@Type(() => CommandAttr)
-	@Expose({ name: "actionText" })
+	@decorate(Type(() => CommandAttr))
+	@decorate(Expose({ name: "actionText" }))
 	actionText!:CommandAttr<string>| undefined;
-	@Type(() => CommandAttr)
-	@Expose({ name: "actionTextColor" })
+	@decorate(Type(() => CommandAttr))
+	@decorate(Expose({ name: "actionTextColor" }))
 	actionTextColor!:CommandAttr<string>| undefined;
-	@Type(() => CommandAttr)
-	@Expose({ name: "maxInlineActionWidth" })
+	@decorate(Type(() => CommandAttr))
+	@decorate(Expose({ name: "maxInlineActionWidth" }))
 	maxInlineActionWidth!:CommandAttr<string>| undefined;
-	@Type(() => CommandAttr)
-	@Expose({ name: "textColor" })
+	@decorate(Type(() => CommandAttr))
+	@decorate(Expose({ name: "textColor" }))
 	textColor!:CommandAttr<string>| undefined;
-	@Type(() => CommandAttr)
-	@Expose({ name: "onClick" })
+	@decorate(Type(() => CommandAttr))
+	@decorate(Expose({ name: "onClick" }))
 	onClick!:CommandAttr<string>| undefined;
-	@Type(() => CommandAttr)
-	@Expose({ name: "background" })
+	@decorate(Type(() => CommandAttr))
+	@decorate(Expose({ name: "background" }))
 	background!:CommandAttr<string>| undefined;
 
-	@Exclude()
+	@decorate(Exclude())
 	protected thisPointer: T;	
 	protected abstract getThisPointer(): T;
 	reset() : T {	
