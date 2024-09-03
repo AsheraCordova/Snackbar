@@ -206,6 +206,7 @@ return layoutParams.weight;			}
 	public class SnackbarContentLayoutExt extends com.google.android.material.snackbar.SnackbarContentLayout implements ILifeCycleDecorator, com.ashera.widget.IMaxDimension{
 		private MeasureEvent measureFinished = new MeasureEvent();
 		private OnLayoutEvent onLayoutEvent = new OnLayoutEvent();
+		private List<IWidget> overlays;
 		public IWidget getWidget() {
 			return SnackbarContentLayoutImpl.this;
 		}
@@ -257,9 +258,12 @@ return layoutParams.weight;			}
 		protected void onLayout(boolean changed, int l, int t, int r, int b) {
 			super.onLayout(changed, l, t, r, b);
 			ViewImpl.setDrawableBounds(SnackbarContentLayoutImpl.this, l, t, r, b);
+			if (!isOverlay()) {
 			ViewImpl.nativeMakeFrame(asNativeWidget(), l, t, r, b);
+			}
 			replayBufferedEvents();
 	        ViewImpl.redrawDrawables(SnackbarContentLayoutImpl.this);
+	        overlays = ViewImpl.drawOverlay(SnackbarContentLayoutImpl.this, overlays);
 			
 			IWidgetLifeCycleListener listener = (IWidgetLifeCycleListener) getListener();
 			if (listener != null) {
@@ -389,7 +393,7 @@ return layoutParams.weight;			}
 				setState4(value);
 				return;
 			}
-			SnackbarContentLayoutImpl.this.setAttribute(name, value, true);
+			SnackbarContentLayoutImpl.this.setAttribute(name, value, !(value instanceof String));
 		}
         @Override
         public void setVisibility(int visibility) {
