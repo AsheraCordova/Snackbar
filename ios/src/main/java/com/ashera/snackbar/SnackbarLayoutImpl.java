@@ -86,7 +86,7 @@ public class SnackbarLayoutImpl extends BaseHasWidgets {
 	}
 
 	@Override
-	public boolean remove(IWidget w) {		
+	public boolean remove(IWidget w) {
 		boolean remove = super.remove(w);
 		snackbarLayout.removeView((View) w.asWidget());
 		 nativeRemoveView(w);            
@@ -319,7 +319,9 @@ return layoutParams.gravity;			}
         @Override
         public void drawableStateChanged() {
         	super.drawableStateChanged();
-        	ViewImpl.drawableStateChanged(SnackbarLayoutImpl.this);
+        	if (!isWidgetDisposed()) {
+        		ViewImpl.drawableStateChanged(SnackbarLayoutImpl.this);
+        	}
         }
         private Map<String, IWidget> templates;
     	@Override
@@ -332,9 +334,10 @@ return layoutParams.gravity;			}
     			template = (IWidget) quickConvert(layout, "template");
     			templates.put(layout, template);
     		}
-    		IWidget widget = template.loadLazyWidgets(SnackbarLayoutImpl.this.getParent());
-    		return (View) widget.asWidget();
-    	}        
+    		
+    		IWidget widget = template.loadLazyWidgets(SnackbarLayoutImpl.this);
+			return (View) widget.asWidget();
+    	}   
         
     	@Override
 		public void remeasure() {
@@ -446,6 +449,7 @@ return layoutParams.gravity;			}
 			super.endViewTransition(view);
 			runBufferedRunnables();
 		}
+	
 	}
 	@Override
 	public Class getViewClass() {

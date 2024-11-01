@@ -100,9 +100,13 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarImpl)
 #define INCLUDE_ADView 1
 #include "View.h"
 
+#define RESTRICT_IViewStub 1
+#define INCLUDE_ASIViewStub 1
+#include "IViewStub.h"
+
 @class ASSnackbarImpl;
 
-@interface ASSnackbarImpl_ViewExt : ADView
+@interface ASSnackbarImpl_ViewExt : ADView < ASIViewStub >
 
 #pragma mark Public
 
