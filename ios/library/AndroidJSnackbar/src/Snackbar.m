@@ -229,7 +229,7 @@ ADXSnackbar *ADXSnackbar_makeInternalWithADContext_withADView_withNSString_withI
   if (context == nil) {
     context = [parent getContext];
   }
-  ADXBaseTransientBottomBar_SnackbarBaseLayout *content = (ADXBaseTransientBottomBar_SnackbarBaseLayout *) cast_chk([((ADView *) nil_chk([parent getChildAtWithInt:0])) inflateViewWithNSString:@"@layout/my_design_layout_snackbar"], [ADXBaseTransientBottomBar_SnackbarBaseLayout class]);
+  ADXBaseTransientBottomBar_SnackbarBaseLayout *content = (ADXBaseTransientBottomBar_SnackbarBaseLayout *) cast_chk([parent inflateViewWithNSString:@"@layout/my_design_layout_snackbar"], [ADXBaseTransientBottomBar_SnackbarBaseLayout class]);
   if ([[((ADXBaseTransientBottomBar_SnackbarBaseLayout *) nil_chk(content)) getLayoutParams] isKindOfClass:[ADXCoordinatorLayout_LayoutParams class]]) {
     ((ADXCoordinatorLayout_LayoutParams *) nil_chk(((ADXCoordinatorLayout_LayoutParams *) cast_chk([content getLayoutParams], [ADXCoordinatorLayout_LayoutParams class]))))->gravity_ = ADGravity_BOTTOM;
     ((ADXCoordinatorLayout_LayoutParams *) nil_chk(((ADXCoordinatorLayout_LayoutParams *) cast_chk([content getLayoutParams], [ADXCoordinatorLayout_LayoutParams class]))))->insetEdge_ = ADGravity_BOTTOM;
