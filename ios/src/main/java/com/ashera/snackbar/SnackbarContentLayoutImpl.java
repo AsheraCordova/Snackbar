@@ -76,6 +76,7 @@ public class SnackbarContentLayoutImpl extends BaseHasWidgets {
 		
 		ViewGroupImpl.registerCommandConveter(this);
 		setWidgetOnNativeClass();
+		
 	}
 	private native void setWidgetOnNativeClass() /*-[
 		((ASUIView*) [self asNativeWidget]).widget = self;
@@ -469,7 +470,7 @@ return layoutParams.weight;			}
 	@SuppressLint("NewApi")
 	@Override
 	public void setAttribute(WidgetAttribute key, String strValue, Object objValue, ILifeCycleDecorator decorator) {
-				ViewGroupImpl.setAttribute(this, key, strValue, objValue, decorator);
+				ViewGroupImpl.setAttribute(this,  key, strValue, objValue, decorator);
 		Object nativeWidget = asNativeWidget();
 
 	}
@@ -529,141 +530,5 @@ return layoutParams.weight;			}
         ((View)asWidget()).setVisibility(b ? View.VISIBLE : View.GONE);
     }
 
-	
-private SnackbarContentLayoutCommandBuilder builder;
-private SnackbarContentLayoutBean bean;
-public Object getPlugin(String plugin) {
-	return WidgetFactory.getAttributable(plugin).newInstance(this);
-}
-public SnackbarContentLayoutBean getBean() {
-	if (bean == null) {
-		bean = new SnackbarContentLayoutBean();
-	}
-	return bean;
-}
-public SnackbarContentLayoutCommandBuilder getBuilder() {
-	if (builder == null) {
-		builder = new SnackbarContentLayoutCommandBuilder();
-	}
-	return builder;
-}
-
-
-public  class SnackbarContentLayoutCommandBuilder extends com.ashera.layout.ViewGroupImpl.ViewGroupCommandBuilder <SnackbarContentLayoutCommandBuilder> {
-    public SnackbarContentLayoutCommandBuilder() {
-	}
-	
-	public SnackbarContentLayoutCommandBuilder execute(boolean setter) {
-		if (setter) {
-			executeCommand(command, null, IWidget.COMMAND_EXEC_SETTER_METHOD);
-			getFragment().remeasure();
-		}
-		executeCommand(command, null, IWidget.COMMAND_EXEC_GETTER_METHOD);
-return this;	}
-
-}
-public class SnackbarContentLayoutBean extends com.ashera.layout.ViewGroupImpl.ViewGroupBean{
-		public SnackbarContentLayoutBean() {
-			super(SnackbarContentLayoutImpl.this);
-		}
-}
-
-
-private SnackbarContentLayoutCommandParamsBuilder paramsBuilder;
-private SnackbarContentLayoutParamsBean paramsBean;
-
-public SnackbarContentLayoutParamsBean getParamsBean() {
-	if (paramsBean == null) {
-		paramsBean = new SnackbarContentLayoutParamsBean();
-	}
-	return paramsBean;
-}
-public SnackbarContentLayoutCommandParamsBuilder getParamsBuilder() {
-	if (paramsBuilder == null) {
-		paramsBuilder = new SnackbarContentLayoutCommandParamsBuilder();
-	}
-	return paramsBuilder;
-}
-
-
-
-public class SnackbarContentLayoutParamsBean extends com.ashera.layout.ViewGroupImpl.ViewGroupParamsBean{
-public Object getLayoutGravity(IWidget w) {
-	java.util.Map<String, Object> layoutParams = new java.util.HashMap<String, Object>();
-	java.util.Map<String, Object> command = getParamsBuilder().reset().tryGetLayoutGravity().getCommand();
-	
-	layoutParams.put("layoutParams", command);
-	w.executeCommand(layoutParams, null, COMMAND_EXEC_GETTER_METHOD); 
-	return getParamsBuilder().getLayoutGravity();
-}
-public void setLayoutGravity(IWidget w, String value) {
-	java.util.Map<String, Object> layoutParams = new java.util.HashMap<String, Object>();
-	layoutParams.put("layoutParams", getParamsBuilder().reset().setLayoutGravity(value).getCommand());
-	w.executeCommand(layoutParams, null, COMMAND_EXEC_SETTER_METHOD);
-	w.getFragment().remeasure();
-}
-
-public Object getLayoutWeight(IWidget w) {
-	java.util.Map<String, Object> layoutParams = new java.util.HashMap<String, Object>();
-	java.util.Map<String, Object> command = getParamsBuilder().reset().tryGetLayoutWeight().getCommand();
-	
-	layoutParams.put("layoutParams", command);
-	w.executeCommand(layoutParams, null, COMMAND_EXEC_GETTER_METHOD); 
-	return getParamsBuilder().getLayoutWeight();
-}
-public void setLayoutWeight(IWidget w, float value) {
-	java.util.Map<String, Object> layoutParams = new java.util.HashMap<String, Object>();
-	layoutParams.put("layoutParams", getParamsBuilder().reset().setLayoutWeight(value).getCommand());
-	w.executeCommand(layoutParams, null, COMMAND_EXEC_SETTER_METHOD);
-	w.getFragment().remeasure();
-}
-
-}
-
-
-
-
-
-public class SnackbarContentLayoutCommandParamsBuilder extends com.ashera.layout.ViewGroupImpl.ViewGroupCommandParamsBuilder<SnackbarContentLayoutCommandParamsBuilder>{
-public SnackbarContentLayoutCommandParamsBuilder tryGetLayoutGravity() {
-	Map<String, Object> attrs = initCommand("layout_gravity");
-	attrs.put("type", "attribute");
-	attrs.put("getter", true);
-	attrs.put("orderGet", ++orderGet);
-return this;}
-
-public Object getLayoutGravity() {
-	Map<String, Object> attrs = initCommand("layout_gravity");
-	return attrs.get("commandReturnValue");
-}
-public SnackbarContentLayoutCommandParamsBuilder setLayoutGravity(String value) {
-	Map<String, Object> attrs = initCommand("layout_gravity");
-	attrs.put("type", "attribute");
-	attrs.put("setter", true);
-	attrs.put("orderSet", ++orderSet);
-
-	attrs.put("value", value);
-return this;}
-public SnackbarContentLayoutCommandParamsBuilder tryGetLayoutWeight() {
-	Map<String, Object> attrs = initCommand("layout_weight");
-	attrs.put("type", "attribute");
-	attrs.put("getter", true);
-	attrs.put("orderGet", ++orderGet);
-return this;}
-
-public Object getLayoutWeight() {
-	Map<String, Object> attrs = initCommand("layout_weight");
-	return attrs.get("commandReturnValue");
-}
-public SnackbarContentLayoutCommandParamsBuilder setLayoutWeight(float value) {
-	Map<String, Object> attrs = initCommand("layout_weight");
-	attrs.put("type", "attribute");
-	attrs.put("setter", true);
-	attrs.put("orderSet", ++orderSet);
-
-	attrs.put("value", value);
-return this;}
-}
-
-	//end - body
+		//end - body
 }

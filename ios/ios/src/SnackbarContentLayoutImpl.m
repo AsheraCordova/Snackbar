@@ -5,7 +5,6 @@
 
 #include "BaseHasWidgets.h"
 #include "HasWidgets.h"
-#include "IAttributable.h"
 #include "IFragment.h"
 #include "ILifeCycleDecorator.h"
 #include "IOSClass.h"
@@ -27,7 +26,6 @@
 #include "ViewImpl.h"
 #include "WidgetAttribute.h"
 #include "WidgetFactory.h"
-#include "java/lang/Boolean.h"
 #include "java/lang/Float.h"
 #include "java/lang/Integer.h"
 #include "java/lang/Runnable.h"
@@ -45,16 +43,11 @@
 
 
 #pragma clang diagnostic ignored "-Wprotocol"
-#pragma clang diagnostic ignored "-Wincomplete-implementation"
 
 @interface ASSnackbarContentLayoutImpl () {
  @public
   id uiView_;
   ADXSnackbarContentLayout *snackbarContentLayout_;
-  ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *builder_;
-  ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean *bean_;
-  ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *paramsBuilder_;
-  ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean *paramsBean_;
 }
 
 - (void)setWidgetOnNativeClass;
@@ -69,10 +62,6 @@
 
 J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl, uiView_, id)
 J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl, snackbarContentLayout_, ADXSnackbarContentLayout *)
-J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl, builder_, ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)
-J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl, bean_, ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean *)
-J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl, paramsBuilder_, ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *)
-J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl, paramsBean_, ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean *)
 
 __attribute__((unused)) static void ASSnackbarContentLayoutImpl_setWidgetOnNativeClass(ASSnackbarContentLayoutImpl *self);
 
@@ -99,20 +88,6 @@ J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt, measur
 J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt, onLayoutEvent_, ASOnLayoutEvent *)
 J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt, overlays_, id<JavaUtilList>)
 J2OBJC_FIELD_SETTER(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt, templates_, id<JavaUtilMap>)
-
-@interface ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder () {
- @public
-  ASSnackbarContentLayoutImpl *this$0_;
-}
-
-@end
-
-@interface ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean () {
- @public
-  ASSnackbarContentLayoutImpl *this$0_;
-}
-
-@end
 
 @interface ASSnackbarContentLayoutImpl_$Lambda$1 : NSObject < JavaLangRunnable > {
  @public
@@ -342,38 +317,6 @@ J2OBJC_IGNORE_DESIGNATED_END
   [((ADView *) nil_chk(((ADView *) cast_chk([self asWidget], [ADView class])))) setVisibilityWithInt:b ? ADView_VISIBLE : ADView_GONE];
 }
 
-- (id)getPluginWithNSString:(NSString *)plugin {
-  return [((id<ASIAttributable>) nil_chk(ASWidgetFactory_getAttributableWithNSString_(plugin))) newInstanceWithASIWidget:self];
-}
-
-- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean *)getBean {
-  if (bean_ == nil) {
-    bean_ = new_ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean_initWithASSnackbarContentLayoutImpl_(self);
-  }
-  return bean_;
-}
-
-- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)getBuilder {
-  if (builder_ == nil) {
-    builder_ = new_ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder_initWithASSnackbarContentLayoutImpl_(self);
-  }
-  return builder_;
-}
-
-- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean *)getParamsBean {
-  if (paramsBean_ == nil) {
-    paramsBean_ = new_ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean_initWithASSnackbarContentLayoutImpl_(self);
-  }
-  return paramsBean_;
-}
-
-- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *)getParamsBuilder {
-  if (paramsBuilder_ == nil) {
-    paramsBuilder_ = new_ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder_initWithASSnackbarContentLayoutImpl_(self);
-  }
-  return paramsBuilder_;
-}
-
 + (const J2ObjcClassInfo *)__metadata {
   static J2ObjcMethodInfo methods[] = {
     { NULL, "V", 0x1, 0, 1, -1, -1, -1, -1 },
@@ -402,11 +345,6 @@ J2OBJC_IGNORE_DESIGNATED_END
     { NULL, "V", 0x1, -1, -1, -1, -1, -1, -1 },
     { NULL, "V", 0x1, 27, 1, -1, -1, -1, -1 },
     { NULL, "V", 0x1, 28, 29, -1, -1, -1, -1 },
-    { NULL, "LNSObject;", 0x1, 30, 1, -1, -1, -1, -1 },
-    { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutBean;", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder;", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean;", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;", 0x1, -1, -1, -1, -1, -1, -1 },
   };
   #pragma clang diagnostic push
   #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
@@ -437,24 +375,15 @@ J2OBJC_IGNORE_DESIGNATED_END
   methods[23].selector = @selector(invalidate);
   methods[24].selector = @selector(setIdWithNSString:);
   methods[25].selector = @selector(setVisibleWithBoolean:);
-  methods[26].selector = @selector(getPluginWithNSString:);
-  methods[27].selector = @selector(getBean);
-  methods[28].selector = @selector(getBuilder);
-  methods[29].selector = @selector(getParamsBean);
-  methods[30].selector = @selector(getParamsBuilder);
   #pragma clang diagnostic pop
   static const J2ObjcFieldInfo fields[] = {
     { "uiView_", "LNSObject;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "LOCAL_NAME", "LNSString;", .constantValue.asLong = 0, 0x19, -1, 31, -1, -1 },
-    { "GROUP_NAME", "LNSString;", .constantValue.asLong = 0, 0x19, -1, 32, -1, -1 },
+    { "LOCAL_NAME", "LNSString;", .constantValue.asLong = 0, 0x19, -1, 30, -1, -1 },
+    { "GROUP_NAME", "LNSString;", .constantValue.asLong = 0, 0x19, -1, 31, -1, -1 },
     { "snackbarContentLayout_", "LADXSnackbarContentLayout;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "builder_", "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "bean_", "LASSnackbarContentLayoutImpl_SnackbarContentLayoutBean;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "paramsBuilder_", "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
-    { "paramsBean_", "LASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean;", .constantValue.asLong = 0, 0x2, -1, -1, -1, -1 },
   };
-  static const void *ptrTable[] = { "loadAttributes", "LNSString;", "LNSString;LNSString;", "create", "LASIFragment;LJavaUtilMap;", "(Lcom/ashera/core/IFragment;Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;)V", "remove", "LASIWidget;", "I", "nativeRemoveView", "add", "LASIWidget;I", "createLayoutParams", "LADView;", "getLayoutParams", "setChildAttribute", "LASIWidget;LASWidgetAttribute;LNSString;LNSObject;", "getChildAttribute", "LASIWidget;LASWidgetAttribute;", "setAttribute", "LASWidgetAttribute;LNSString;LNSObject;LASILifeCycleDecorator;", "getAttribute", "LASWidgetAttribute;LASILifeCycleDecorator;", "checkIosVersion", "nativeCreate", "LJavaUtilMap;", "(Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;)V", "setId", "setVisible", "Z", "getPlugin", &ASSnackbarContentLayoutImpl_LOCAL_NAME, &ASSnackbarContentLayoutImpl_GROUP_NAME, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutExt;LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder;LASSnackbarContentLayoutImpl_SnackbarContentLayoutBean;LASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean;LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;" };
-  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl = { "SnackbarContentLayoutImpl", "com.ashera.snackbar", ptrTable, methods, fields, 7, 0x1, 31, 8, -1, 33, -1, -1, -1 };
+  static const void *ptrTable[] = { "loadAttributes", "LNSString;", "LNSString;LNSString;", "create", "LASIFragment;LJavaUtilMap;", "(Lcom/ashera/core/IFragment;Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;)V", "remove", "LASIWidget;", "I", "nativeRemoveView", "add", "LASIWidget;I", "createLayoutParams", "LADView;", "getLayoutParams", "setChildAttribute", "LASIWidget;LASWidgetAttribute;LNSString;LNSObject;", "getChildAttribute", "LASIWidget;LASWidgetAttribute;", "setAttribute", "LASWidgetAttribute;LNSString;LNSObject;LASILifeCycleDecorator;", "getAttribute", "LASWidgetAttribute;LASILifeCycleDecorator;", "checkIosVersion", "nativeCreate", "LJavaUtilMap;", "(Ljava/util/Map<Ljava/lang/String;Ljava/lang/Object;>;)V", "setId", "setVisible", "Z", &ASSnackbarContentLayoutImpl_LOCAL_NAME, &ASSnackbarContentLayoutImpl_GROUP_NAME, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutExt;" };
+  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl = { "SnackbarContentLayoutImpl", "com.ashera.snackbar", ptrTable, methods, fields, 7, 0x1, 26, 4, -1, 32, -1, -1, -1 };
   return &_ASSnackbarContentLayoutImpl;
 }
 
@@ -888,269 +817,6 @@ ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt *create_ASSnackbarContentLa
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl_SnackbarContentLayoutExt)
-
-@implementation ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder
-
-- (instancetype)initWithASSnackbarContentLayoutImpl:(ASSnackbarContentLayoutImpl *)outer$ {
-  ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder_initWithASSnackbarContentLayoutImpl_(self, outer$);
-  return self;
-}
-
-- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *)executeWithBoolean:(jboolean)setter {
-  if (setter) {
-    [this$0_ executeCommandWithJavaUtilMap:command_ withASIWidget_CommandCallBack:nil withInt:ASIWidget_COMMAND_EXEC_SETTER_METHOD];
-    [((id<ASIFragment>) nil_chk([this$0_ getFragment])) remeasure];
-  }
-  [this$0_ executeCommandWithJavaUtilMap:command_ withASIWidget_CommandCallBack:nil withInt:ASIWidget_COMMAND_EXEC_GETTER_METHOD];
-  return self;
-}
-
-+ (const J2ObjcClassInfo *)__metadata {
-  static J2ObjcMethodInfo methods[] = {
-    { NULL, NULL, 0x1, -1, 0, -1, -1, -1, -1 },
-    { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder;", 0x1, 1, 2, -1, -1, -1, -1 },
-  };
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
-  #pragma clang diagnostic ignored "-Wundeclared-selector"
-  methods[0].selector = @selector(initWithASSnackbarContentLayoutImpl:);
-  methods[1].selector = @selector(executeWithBoolean:);
-  #pragma clang diagnostic pop
-  static const J2ObjcFieldInfo fields[] = {
-    { "this$0_", "LASSnackbarContentLayoutImpl;", .constantValue.asLong = 0, 0x1012, -1, -1, -1, -1 },
-  };
-  static const void *ptrTable[] = { "LASSnackbarContentLayoutImpl;", "execute", "Z", "Lcom/ashera/layout/ViewGroupImpl$ViewGroupCommandBuilder<Lcom/ashera/snackbar/SnackbarContentLayoutImpl$SnackbarContentLayoutCommandBuilder;>;" };
-  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder = { "SnackbarContentLayoutCommandBuilder", "com.ashera.snackbar", ptrTable, methods, fields, 7, 0x1, 2, 1, 0, -1, -1, 3, -1 };
-  return &_ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder;
-}
-
-@end
-
-void ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *self, ASSnackbarContentLayoutImpl *outer$) {
-  self->this$0_ = outer$;
-  ASViewGroupImpl_ViewGroupCommandBuilder_init(self);
-}
-
-ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *new_ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl *outer$) {
-  J2OBJC_NEW_IMPL(ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder, initWithASSnackbarContentLayoutImpl_, outer$)
-}
-
-ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder *create_ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl *outer$) {
-  J2OBJC_CREATE_IMPL(ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder, initWithASSnackbarContentLayoutImpl_, outer$)
-}
-
-J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandBuilder)
-
-@implementation ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean
-
-- (instancetype)initWithASSnackbarContentLayoutImpl:(ASSnackbarContentLayoutImpl *)outer$ {
-  ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean_initWithASSnackbarContentLayoutImpl_(self, outer$);
-  return self;
-}
-
-+ (const J2ObjcClassInfo *)__metadata {
-  static J2ObjcMethodInfo methods[] = {
-    { NULL, NULL, 0x1, -1, 0, -1, -1, -1, -1 },
-  };
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
-  #pragma clang diagnostic ignored "-Wundeclared-selector"
-  methods[0].selector = @selector(initWithASSnackbarContentLayoutImpl:);
-  #pragma clang diagnostic pop
-  static const void *ptrTable[] = { "LASSnackbarContentLayoutImpl;" };
-  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean = { "SnackbarContentLayoutBean", "com.ashera.snackbar", ptrTable, methods, NULL, 7, 0x1, 1, 0, 0, -1, -1, -1, -1 };
-  return &_ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean;
-}
-
-@end
-
-void ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean *self, ASSnackbarContentLayoutImpl *outer$) {
-  ASViewGroupImpl_ViewGroupBean_initWithASIWidget_(self, outer$);
-}
-
-ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean *new_ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl *outer$) {
-  J2OBJC_NEW_IMPL(ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean, initWithASSnackbarContentLayoutImpl_, outer$)
-}
-
-ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean *create_ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl *outer$) {
-  J2OBJC_CREATE_IMPL(ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean, initWithASSnackbarContentLayoutImpl_, outer$)
-}
-
-J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl_SnackbarContentLayoutBean)
-
-@implementation ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean
-
-- (instancetype)initWithASSnackbarContentLayoutImpl:(ASSnackbarContentLayoutImpl *)outer$ {
-  ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean_initWithASSnackbarContentLayoutImpl_(self, outer$);
-  return self;
-}
-
-- (id)getLayoutGravityWithASIWidget:(id<ASIWidget>)w {
-  id<JavaUtilMap> layoutParams = new_JavaUtilHashMap_init();
-  id<JavaUtilMap> command = [((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([this$0_ getParamsBuilder])) reset])) tryGetLayoutGravity])) getCommand];
-  (void) [layoutParams putWithId:@"layoutParams" withId:command];
-  [((id<ASIWidget>) nil_chk(w)) executeCommandWithJavaUtilMap:layoutParams withASIWidget_CommandCallBack:nil withInt:ASIWidget_COMMAND_EXEC_GETTER_METHOD];
-  return [((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([this$0_ getParamsBuilder])) getLayoutGravity];
-}
-
-- (void)setLayoutGravityWithASIWidget:(id<ASIWidget>)w
-                         withNSString:(NSString *)value {
-  id<JavaUtilMap> layoutParams = new_JavaUtilHashMap_init();
-  (void) [layoutParams putWithId:@"layoutParams" withId:[((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([this$0_ getParamsBuilder])) reset])) setLayoutGravityWithNSString:value])) getCommand]];
-  [((id<ASIWidget>) nil_chk(w)) executeCommandWithJavaUtilMap:layoutParams withASIWidget_CommandCallBack:nil withInt:ASIWidget_COMMAND_EXEC_SETTER_METHOD];
-  [((id<ASIFragment>) nil_chk([w getFragment])) remeasure];
-}
-
-- (id)getLayoutWeightWithASIWidget:(id<ASIWidget>)w {
-  id<JavaUtilMap> layoutParams = new_JavaUtilHashMap_init();
-  id<JavaUtilMap> command = [((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([this$0_ getParamsBuilder])) reset])) tryGetLayoutWeight])) getCommand];
-  (void) [layoutParams putWithId:@"layoutParams" withId:command];
-  [((id<ASIWidget>) nil_chk(w)) executeCommandWithJavaUtilMap:layoutParams withASIWidget_CommandCallBack:nil withInt:ASIWidget_COMMAND_EXEC_GETTER_METHOD];
-  return [((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([this$0_ getParamsBuilder])) getLayoutWeight];
-}
-
-- (void)setLayoutWeightWithASIWidget:(id<ASIWidget>)w
-                           withFloat:(jfloat)value {
-  id<JavaUtilMap> layoutParams = new_JavaUtilHashMap_init();
-  (void) [layoutParams putWithId:@"layoutParams" withId:[((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([((ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *) nil_chk([this$0_ getParamsBuilder])) reset])) setLayoutWeightWithFloat:value])) getCommand]];
-  [((id<ASIWidget>) nil_chk(w)) executeCommandWithJavaUtilMap:layoutParams withASIWidget_CommandCallBack:nil withInt:ASIWidget_COMMAND_EXEC_SETTER_METHOD];
-  [((id<ASIFragment>) nil_chk([w getFragment])) remeasure];
-}
-
-+ (const J2ObjcClassInfo *)__metadata {
-  static J2ObjcMethodInfo methods[] = {
-    { NULL, NULL, 0x1, -1, 0, -1, -1, -1, -1 },
-    { NULL, "LNSObject;", 0x1, 1, 2, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, 3, 4, -1, -1, -1, -1 },
-    { NULL, "LNSObject;", 0x1, 5, 2, -1, -1, -1, -1 },
-    { NULL, "V", 0x1, 6, 7, -1, -1, -1, -1 },
-  };
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
-  #pragma clang diagnostic ignored "-Wundeclared-selector"
-  methods[0].selector = @selector(initWithASSnackbarContentLayoutImpl:);
-  methods[1].selector = @selector(getLayoutGravityWithASIWidget:);
-  methods[2].selector = @selector(setLayoutGravityWithASIWidget:withNSString:);
-  methods[3].selector = @selector(getLayoutWeightWithASIWidget:);
-  methods[4].selector = @selector(setLayoutWeightWithASIWidget:withFloat:);
-  #pragma clang diagnostic pop
-  static const J2ObjcFieldInfo fields[] = {
-    { "this$0_", "LASSnackbarContentLayoutImpl;", .constantValue.asLong = 0, 0x1012, -1, -1, -1, -1 },
-  };
-  static const void *ptrTable[] = { "LASSnackbarContentLayoutImpl;", "getLayoutGravity", "LASIWidget;", "setLayoutGravity", "LASIWidget;LNSString;", "getLayoutWeight", "setLayoutWeight", "LASIWidget;F" };
-  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean = { "SnackbarContentLayoutParamsBean", "com.ashera.snackbar", ptrTable, methods, fields, 7, 0x1, 5, 1, 0, -1, -1, -1, -1 };
-  return &_ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean;
-}
-
-@end
-
-void ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean *self, ASSnackbarContentLayoutImpl *outer$) {
-  self->this$0_ = outer$;
-  ASViewGroupImpl_ViewGroupParamsBean_init(self);
-}
-
-ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean *new_ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl *outer$) {
-  J2OBJC_NEW_IMPL(ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean, initWithASSnackbarContentLayoutImpl_, outer$)
-}
-
-ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean *create_ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl *outer$) {
-  J2OBJC_CREATE_IMPL(ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean, initWithASSnackbarContentLayoutImpl_, outer$)
-}
-
-J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl_SnackbarContentLayoutParamsBean)
-
-@implementation ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder
-
-- (instancetype)initWithASSnackbarContentLayoutImpl:(ASSnackbarContentLayoutImpl *)outer$ {
-  ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder_initWithASSnackbarContentLayoutImpl_(self, outer$);
-  return self;
-}
-
-- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *)tryGetLayoutGravity {
-  id<JavaUtilMap> attrs = [self initCommandWithNSString:@"layout_gravity"];
-  (void) [((id<JavaUtilMap>) nil_chk(attrs)) putWithId:@"type" withId:@"attribute"];
-  (void) [attrs putWithId:@"getter" withId:JavaLangBoolean_valueOfWithBoolean_(true)];
-  (void) [attrs putWithId:@"orderGet" withId:JavaLangInteger_valueOfWithInt_(++orderGet_)];
-  return self;
-}
-
-- (id)getLayoutGravity {
-  id<JavaUtilMap> attrs = [self initCommandWithNSString:@"layout_gravity"];
-  return [((id<JavaUtilMap>) nil_chk(attrs)) getWithId:@"commandReturnValue"];
-}
-
-- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *)setLayoutGravityWithNSString:(NSString *)value {
-  id<JavaUtilMap> attrs = [self initCommandWithNSString:@"layout_gravity"];
-  (void) [((id<JavaUtilMap>) nil_chk(attrs)) putWithId:@"type" withId:@"attribute"];
-  (void) [attrs putWithId:@"setter" withId:JavaLangBoolean_valueOfWithBoolean_(true)];
-  (void) [attrs putWithId:@"orderSet" withId:JavaLangInteger_valueOfWithInt_(++orderSet_)];
-  (void) [attrs putWithId:@"value" withId:value];
-  return self;
-}
-
-- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *)tryGetLayoutWeight {
-  id<JavaUtilMap> attrs = [self initCommandWithNSString:@"layout_weight"];
-  (void) [((id<JavaUtilMap>) nil_chk(attrs)) putWithId:@"type" withId:@"attribute"];
-  (void) [attrs putWithId:@"getter" withId:JavaLangBoolean_valueOfWithBoolean_(true)];
-  (void) [attrs putWithId:@"orderGet" withId:JavaLangInteger_valueOfWithInt_(++orderGet_)];
-  return self;
-}
-
-- (id)getLayoutWeight {
-  id<JavaUtilMap> attrs = [self initCommandWithNSString:@"layout_weight"];
-  return [((id<JavaUtilMap>) nil_chk(attrs)) getWithId:@"commandReturnValue"];
-}
-
-- (ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *)setLayoutWeightWithFloat:(jfloat)value {
-  id<JavaUtilMap> attrs = [self initCommandWithNSString:@"layout_weight"];
-  (void) [((id<JavaUtilMap>) nil_chk(attrs)) putWithId:@"type" withId:@"attribute"];
-  (void) [attrs putWithId:@"setter" withId:JavaLangBoolean_valueOfWithBoolean_(true)];
-  (void) [attrs putWithId:@"orderSet" withId:JavaLangInteger_valueOfWithInt_(++orderSet_)];
-  (void) [attrs putWithId:@"value" withId:JavaLangFloat_valueOfWithFloat_(value)];
-  return self;
-}
-
-+ (const J2ObjcClassInfo *)__metadata {
-  static J2ObjcMethodInfo methods[] = {
-    { NULL, NULL, 0x1, -1, 0, -1, -1, -1, -1 },
-    { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "LNSObject;", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;", 0x1, 1, 2, -1, -1, -1, -1 },
-    { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "LNSObject;", 0x1, -1, -1, -1, -1, -1, -1 },
-    { NULL, "LASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;", 0x1, 3, 4, -1, -1, -1, -1 },
-  };
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wobjc-multiple-method-names"
-  #pragma clang diagnostic ignored "-Wundeclared-selector"
-  methods[0].selector = @selector(initWithASSnackbarContentLayoutImpl:);
-  methods[1].selector = @selector(tryGetLayoutGravity);
-  methods[2].selector = @selector(getLayoutGravity);
-  methods[3].selector = @selector(setLayoutGravityWithNSString:);
-  methods[4].selector = @selector(tryGetLayoutWeight);
-  methods[5].selector = @selector(getLayoutWeight);
-  methods[6].selector = @selector(setLayoutWeightWithFloat:);
-  #pragma clang diagnostic pop
-  static const void *ptrTable[] = { "LASSnackbarContentLayoutImpl;", "setLayoutGravity", "LNSString;", "setLayoutWeight", "F", "Lcom/ashera/layout/ViewGroupImpl$ViewGroupCommandParamsBuilder<Lcom/ashera/snackbar/SnackbarContentLayoutImpl$SnackbarContentLayoutCommandParamsBuilder;>;" };
-  static const J2ObjcClassInfo _ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder = { "SnackbarContentLayoutCommandParamsBuilder", "com.ashera.snackbar", ptrTable, methods, NULL, 7, 0x1, 7, 0, 0, -1, -1, 5, -1 };
-  return &_ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder;
-}
-
-@end
-
-void ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *self, ASSnackbarContentLayoutImpl *outer$) {
-  ASViewGroupImpl_ViewGroupCommandParamsBuilder_init(self);
-}
-
-ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *new_ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl *outer$) {
-  J2OBJC_NEW_IMPL(ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder, initWithASSnackbarContentLayoutImpl_, outer$)
-}
-
-ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder *create_ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder_initWithASSnackbarContentLayoutImpl_(ASSnackbarContentLayoutImpl *outer$) {
-  J2OBJC_CREATE_IMPL(ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder, initWithASSnackbarContentLayoutImpl_, outer$)
-}
-
-J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarContentLayoutImpl_SnackbarContentLayoutCommandParamsBuilder)
 
 @implementation ASSnackbarContentLayoutImpl_$Lambda$1
 
