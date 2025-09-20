@@ -3,6 +3,7 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\SnackbarManager.java
 //
 
+#import <Foundation/Foundation.h>
 #include "J2ObjC_header.h"
 
 #pragma push_macro("INCLUDE_ALL_SnackbarManager")
@@ -23,6 +24,8 @@
 #define ADXSnackbarManager_
 
 @class ADXSnackbarManager_SnackbarRecord;
+@class JavaLangBoolean;
+@class JavaLangInteger;
 @protocol ADXSnackbarManager_Callback;
 
 /*!
@@ -33,11 +36,11 @@
 #pragma mark Public
 
 - (void)dismissWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback
-                                       withInt:(jint)event;
+                                       withInt:(int32_t)event;
 
-- (jboolean)isCurrentWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
+- (bool)isCurrentWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
 
-- (jboolean)isCurrentOrNextWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
+- (bool)isCurrentOrNextWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
 
 /*!
  @brief Should be called when a Snackbar is no longer displayed.This is after any exit animation has
@@ -55,7 +58,7 @@
 
 - (void)restoreTimeoutIfPausedWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
 
-- (void)showWithInt:(jint)duration
+- (void)showWithInt:(int32_t)duration
 withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
 
 #pragma mark Package-Private
@@ -72,9 +75,9 @@ withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
 
 J2OBJC_EMPTY_STATIC_INIT(ADXSnackbarManager)
 
-inline jint ADXSnackbarManager_get_MSG_TIMEOUT(void);
+inline int32_t ADXSnackbarManager_get_MSG_TIMEOUT(void);
 #define ADXSnackbarManager_MSG_TIMEOUT 0
-J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbarManager, MSG_TIMEOUT, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbarManager, MSG_TIMEOUT, int32_t)
 
 FOUNDATION_EXPORT ADXSnackbarManager *ADXSnackbarManager_getInstance(void);
 
@@ -82,22 +85,26 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbarManager)
 
 @compatibility_alias ComGoogleAndroidMaterialSnackbarSnackbarManager ADXSnackbarManager;
 
+
 #endif
 
 #if !defined (ADXSnackbarManager_Callback_) && (INCLUDE_ALL_SnackbarManager || defined(INCLUDE_ADXSnackbarManager_Callback))
 #define ADXSnackbarManager_Callback_
 
+@class JavaLangInteger;
+
 @protocol ADXSnackbarManager_Callback < JavaObject >
 
 - (void)show;
 
-- (void)dismissWithInt:(jint)event;
+- (void)dismissWithInt:(int32_t)event;
 
 @end
 
 J2OBJC_EMPTY_STATIC_INIT(ADXSnackbarManager_Callback)
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbarManager_Callback)
+
 
 #endif
 

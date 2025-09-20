@@ -3,6 +3,7 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\Snackbar.java
 //
 
+#import <Foundation/Foundation.h>
 #include "J2ObjC_header.h"
 
 #pragma push_macro("INCLUDE_ALL_Snackbar")
@@ -26,6 +27,8 @@
 @class ADView;
 @class ADViewGroup;
 @class ADXBaseTransientBottomBar_SnackbarBaseLayout;
+@class JavaLangInteger;
+@class NSString;
 @protocol ADView_OnClickListener;
 @protocol JavaLangCharSequence;
 
@@ -42,24 +45,24 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
 + (ADXSnackbar *)makeWithADContext:(ADContext *)context
                         withADView:(ADView *)view
                       withNSString:(NSString *)text
-                           withInt:(jint)duration;
+                           withInt:(int32_t)duration;
 
 + (ADXSnackbar *)makeWithADView:(ADView *)view
                    withNSString:(NSString *)text
-                        withInt:(jint)duration;
+                        withInt:(int32_t)duration;
 
 - (ADXSnackbar *)setActionWithNSString:(NSString *)text
             withADView_OnClickListener:(id<ADView_OnClickListener>)listener;
 
 - (ADXSnackbar *)setActionTextColorWithADColorStateList:(ADColorStateList *)colors;
 
-- (ADXSnackbar *)setAnimationModeWithInt:(jint)arg0;
+- (ADXSnackbar *)setAnimationModeWithInt:(int32_t)animationMode;
 
 - (void)setBackgroundWithADDrawable:(ADDrawable *)background;
 
-- (ADXSnackbar *)setDurationWithInt:(jint)arg0;
+- (ADXSnackbar *)setDurationWithInt:(int32_t)duration;
 
-- (ADXSnackbar *)setMaxInlineActionWidthWithInt:(jint)width;
+- (ADXSnackbar *)setMaxInlineActionWidthWithInt:(int32_t)width;
 
 - (ADXSnackbar *)setTextWithJavaLangCharSequence:(id<JavaLangCharSequence>)message;
 
@@ -69,7 +72,7 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
 
 J2OBJC_EMPTY_STATIC_INIT(ADXSnackbar)
 
-FOUNDATION_EXPORT ADXSnackbar *ADXSnackbar_makeWithADContext_withADView_withNSString_withInt_(ADContext *context, ADView *view, NSString *text, jint duration);
+FOUNDATION_EXPORT ADXSnackbar *ADXSnackbar_makeWithADContext_withADView_withNSString_withInt_(ADContext *context, ADView *view, NSString *text, int32_t duration);
 
 FOUNDATION_EXPORT void ADXSnackbar_initWithADContext_withADViewGroup_withADXBaseTransientBottomBar_SnackbarBaseLayout_(ADXSnackbar *self, ADContext *context, ADViewGroup *parent, ADXBaseTransientBottomBar_SnackbarBaseLayout *content);
 
@@ -77,11 +80,12 @@ FOUNDATION_EXPORT ADXSnackbar *new_ADXSnackbar_initWithADContext_withADViewGroup
 
 FOUNDATION_EXPORT ADXSnackbar *create_ADXSnackbar_initWithADContext_withADViewGroup_withADXBaseTransientBottomBar_SnackbarBaseLayout_(ADContext *context, ADViewGroup *parent, ADXBaseTransientBottomBar_SnackbarBaseLayout *content);
 
-FOUNDATION_EXPORT ADXSnackbar *ADXSnackbar_makeWithADView_withNSString_withInt_(ADView *view, NSString *text, jint duration);
+FOUNDATION_EXPORT ADXSnackbar *ADXSnackbar_makeWithADView_withNSString_withInt_(ADView *view, NSString *text, int32_t duration);
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbar)
 
 @compatibility_alias ComGoogleAndroidMaterialSnackbarSnackbar ADXSnackbar;
+
 
 #endif
 
@@ -93,6 +97,7 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbar)
 #include "BaseTransientBottomBar.h"
 
 @class ADXSnackbar;
+@class JavaLangInteger;
 
 @interface ADXSnackbar_Callback : ADXBaseTransientBottomBar_BaseCallback
 
@@ -101,7 +106,7 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbar)
 - (instancetype)init;
 
 - (void)onDismissedWithId:(ADXSnackbar *)transientBottomBar
-                  withInt:(jint)event;
+                  withInt:(int32_t)event;
 
 - (void)onShownWithId:(ADXSnackbar *)sb;
 
@@ -109,25 +114,25 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbar)
 
 J2OBJC_EMPTY_STATIC_INIT(ADXSnackbar_Callback)
 
-inline jint ADXSnackbar_Callback_get_DISMISS_EVENT_SWIPE(void);
+inline int32_t ADXSnackbar_Callback_get_DISMISS_EVENT_SWIPE(void);
 #define ADXSnackbar_Callback_DISMISS_EVENT_SWIPE 0
-J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_SWIPE, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_SWIPE, int32_t)
 
-inline jint ADXSnackbar_Callback_get_DISMISS_EVENT_ACTION(void);
+inline int32_t ADXSnackbar_Callback_get_DISMISS_EVENT_ACTION(void);
 #define ADXSnackbar_Callback_DISMISS_EVENT_ACTION 1
-J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_ACTION, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_ACTION, int32_t)
 
-inline jint ADXSnackbar_Callback_get_DISMISS_EVENT_TIMEOUT(void);
+inline int32_t ADXSnackbar_Callback_get_DISMISS_EVENT_TIMEOUT(void);
 #define ADXSnackbar_Callback_DISMISS_EVENT_TIMEOUT 2
-J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_TIMEOUT, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_TIMEOUT, int32_t)
 
-inline jint ADXSnackbar_Callback_get_DISMISS_EVENT_MANUAL(void);
+inline int32_t ADXSnackbar_Callback_get_DISMISS_EVENT_MANUAL(void);
 #define ADXSnackbar_Callback_DISMISS_EVENT_MANUAL 3
-J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_MANUAL, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_MANUAL, int32_t)
 
-inline jint ADXSnackbar_Callback_get_DISMISS_EVENT_CONSECUTIVE(void);
+inline int32_t ADXSnackbar_Callback_get_DISMISS_EVENT_CONSECUTIVE(void);
 #define ADXSnackbar_Callback_DISMISS_EVENT_CONSECUTIVE 4
-J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_CONSECUTIVE, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbar_Callback, DISMISS_EVENT_CONSECUTIVE, int32_t)
 
 FOUNDATION_EXPORT void ADXSnackbar_Callback_init(ADXSnackbar_Callback *self);
 
@@ -136,6 +141,7 @@ FOUNDATION_EXPORT ADXSnackbar_Callback *new_ADXSnackbar_Callback_init(void) NS_R
 FOUNDATION_EXPORT ADXSnackbar_Callback *create_ADXSnackbar_Callback_init(void);
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbar_Callback)
+
 
 #endif
 
@@ -146,6 +152,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbar_Callback)
 #define INCLUDE_ADXBaseTransientBottomBar_SnackbarBaseLayout 1
 #include "BaseTransientBottomBar.h"
 
+@class JavaLangInteger;
+
 @interface ADXSnackbar_SnackbarLayout : ADXBaseTransientBottomBar_SnackbarBaseLayout
 
 #pragma mark Public
@@ -154,8 +162,8 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbar_Callback)
 
 #pragma mark Protected
 
-- (void)onMeasureWithInt:(jint)widthMeasureSpec
-                 withInt:(jint)heightMeasureSpec;
+- (void)onMeasureWithInt:(int32_t)widthMeasureSpec
+                 withInt:(int32_t)heightMeasureSpec;
 
 @end
 
@@ -168,6 +176,7 @@ FOUNDATION_EXPORT ADXSnackbar_SnackbarLayout *new_ADXSnackbar_SnackbarLayout_ini
 FOUNDATION_EXPORT ADXSnackbar_SnackbarLayout *create_ADXSnackbar_SnackbarLayout_init(void);
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbar_SnackbarLayout)
+
 
 #endif
 

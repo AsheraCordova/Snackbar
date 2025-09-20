@@ -3,6 +3,11 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\SnackbarManager.java
 //
 
+#define J2OBJC_IMPORTED_BY_JAVA_IMPLEMENTATION 1
+
+
+
+
 #include "BaseTransientBottomBar.h"
 #include "Handler.h"
 #include "J2ObjC_source.h"
@@ -10,10 +15,16 @@
 #include "Message.h"
 #include "Snackbar.h"
 #include "SnackbarManager.h"
+#include "java/lang/Boolean.h"
+#include "java/lang/Integer.h"
 #include "java/lang/ref/WeakReference.h"
 
+
 @class ADXSnackbarManager_SnackbarRecord;
-@class JavaLangRefWeakReference;
+
+
+#pragma clang diagnostic error "-Wreturn-type"
+#pragma clang diagnostic ignored "-Wswitch"
 
 
 @interface ADXSnackbarManager () {
@@ -28,12 +39,12 @@
 
 - (void)showNextSnackbarLocked;
 
-- (jboolean)cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord:(ADXSnackbarManager_SnackbarRecord *)record
-                                                              withInt:(jint)event;
+- (bool)cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord:(ADXSnackbarManager_SnackbarRecord *)record
+                                                          withInt:(int32_t)event;
 
-- (jboolean)isCurrentSnackbarLockedWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
+- (bool)isCurrentSnackbarLockedWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
 
-- (jboolean)isNextSnackbarLockedWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
+- (bool)isNextSnackbarLockedWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
 
 - (void)scheduleTimeoutLockedWithADXSnackbarManager_SnackbarRecord:(ADXSnackbarManager_SnackbarRecord *)r;
 
@@ -44,13 +55,13 @@ J2OBJC_FIELD_SETTER(ADXSnackbarManager, handler_, ADHandler *)
 J2OBJC_FIELD_SETTER(ADXSnackbarManager, currentSnackbar_, ADXSnackbarManager_SnackbarRecord *)
 J2OBJC_FIELD_SETTER(ADXSnackbarManager, nextSnackbar_, ADXSnackbarManager_SnackbarRecord *)
 
-inline jint ADXSnackbarManager_get_SHORT_DURATION_MS(void);
+inline int32_t ADXSnackbarManager_get_SHORT_DURATION_MS(void);
 #define ADXSnackbarManager_SHORT_DURATION_MS 1500
-J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbarManager, SHORT_DURATION_MS, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbarManager, SHORT_DURATION_MS, int32_t)
 
-inline jint ADXSnackbarManager_get_LONG_DURATION_MS(void);
+inline int32_t ADXSnackbarManager_get_LONG_DURATION_MS(void);
 #define ADXSnackbarManager_LONG_DURATION_MS 2750
-J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbarManager, LONG_DURATION_MS, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXSnackbarManager, LONG_DURATION_MS, int32_t)
 
 inline ADXSnackbarManager *ADXSnackbarManager_get_snackbarManager(void);
 inline ADXSnackbarManager *ADXSnackbarManager_set_snackbarManager(ADXSnackbarManager *value);
@@ -65,11 +76,11 @@ __attribute__((unused)) static ADXSnackbarManager *create_ADXSnackbarManager_ini
 
 __attribute__((unused)) static void ADXSnackbarManager_showNextSnackbarLocked(ADXSnackbarManager *self);
 
-__attribute__((unused)) static jboolean ADXSnackbarManager_cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord_withInt_(ADXSnackbarManager *self, ADXSnackbarManager_SnackbarRecord *record, jint event);
+__attribute__((unused)) static bool ADXSnackbarManager_cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord_withInt_(ADXSnackbarManager *self, ADXSnackbarManager_SnackbarRecord *record, int32_t event);
 
-__attribute__((unused)) static jboolean ADXSnackbarManager_isCurrentSnackbarLockedWithADXSnackbarManager_Callback_(ADXSnackbarManager *self, id<ADXSnackbarManager_Callback> callback);
+__attribute__((unused)) static bool ADXSnackbarManager_isCurrentSnackbarLockedWithADXSnackbarManager_Callback_(ADXSnackbarManager *self, id<ADXSnackbarManager_Callback> callback);
 
-__attribute__((unused)) static jboolean ADXSnackbarManager_isNextSnackbarLockedWithADXSnackbarManager_Callback_(ADXSnackbarManager *self, id<ADXSnackbarManager_Callback> callback);
+__attribute__((unused)) static bool ADXSnackbarManager_isNextSnackbarLockedWithADXSnackbarManager_Callback_(ADXSnackbarManager *self, id<ADXSnackbarManager_Callback> callback);
 
 __attribute__((unused)) static void ADXSnackbarManager_scheduleTimeoutLockedWithADXSnackbarManager_SnackbarRecord_(ADXSnackbarManager *self, ADXSnackbarManager_SnackbarRecord *r);
 
@@ -80,7 +91,7 @@ __attribute__((unused)) static void ADXSnackbarManager_scheduleTimeoutLockedWith
 
 - (instancetype)initWithADXSnackbarManager:(ADXSnackbarManager *)outer$;
 
-- (jboolean)handleMessageWithADMessage:(ADMessage *)message;
+- (bool)handleMessageWithADMessage:(ADMessage *)message;
 
 @end
 
@@ -92,6 +103,7 @@ __attribute__((unused)) static ADXSnackbarManager_1 *new_ADXSnackbarManager_1_in
 
 __attribute__((unused)) static ADXSnackbarManager_1 *create_ADXSnackbarManager_1_initWithADXSnackbarManager_(ADXSnackbarManager *outer$);
 
+
 @interface ADXSnackbarManager_Callback : NSObject
 
 @end
@@ -99,14 +111,14 @@ __attribute__((unused)) static ADXSnackbarManager_1 *create_ADXSnackbarManager_1
 @interface ADXSnackbarManager_SnackbarRecord : NSObject {
  @public
   JavaLangRefWeakReference *callback_;
-  jint duration_;
-  jboolean paused_;
+  int32_t duration_;
+  bool paused_;
 }
 
-- (instancetype)initWithInt:(jint)duration
+- (instancetype)initWithInt:(int32_t)duration
 withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
 
-- (jboolean)isSnackbarWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
+- (bool)isSnackbarWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback;
 
 @end
 
@@ -114,13 +126,14 @@ J2OBJC_EMPTY_STATIC_INIT(ADXSnackbarManager_SnackbarRecord)
 
 J2OBJC_FIELD_SETTER(ADXSnackbarManager_SnackbarRecord, callback_, JavaLangRefWeakReference *)
 
-__attribute__((unused)) static void ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(ADXSnackbarManager_SnackbarRecord *self, jint duration, id<ADXSnackbarManager_Callback> callback);
+__attribute__((unused)) static void ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(ADXSnackbarManager_SnackbarRecord *self, int32_t duration, id<ADXSnackbarManager_Callback> callback);
 
-__attribute__((unused)) static ADXSnackbarManager_SnackbarRecord *new_ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(jint duration, id<ADXSnackbarManager_Callback> callback) NS_RETURNS_RETAINED;
+__attribute__((unused)) static ADXSnackbarManager_SnackbarRecord *new_ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(int32_t duration, id<ADXSnackbarManager_Callback> callback) NS_RETURNS_RETAINED;
 
-__attribute__((unused)) static ADXSnackbarManager_SnackbarRecord *create_ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(jint duration, id<ADXSnackbarManager_Callback> callback);
+__attribute__((unused)) static ADXSnackbarManager_SnackbarRecord *create_ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(int32_t duration, id<ADXSnackbarManager_Callback> callback);
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbarManager_SnackbarRecord)
+
 
 @implementation ADXSnackbarManager
 
@@ -133,7 +146,7 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbarManager_SnackbarRecord)
   return self;
 }
 
-- (void)showWithInt:(jint)duration
+- (void)showWithInt:(int32_t)duration
 withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
   @synchronized(lock_) {
     if (ADXSnackbarManager_isCurrentSnackbarLockedWithADXSnackbarManager_Callback_(self, callback)) {
@@ -159,7 +172,7 @@ withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
 }
 
 - (void)dismissWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback
-                                       withInt:(jint)event {
+                                       withInt:(int32_t)event {
   @synchronized(lock_) {
     if (ADXSnackbarManager_isCurrentSnackbarLockedWithADXSnackbarManager_Callback_(self, callback)) {
       ADXSnackbarManager_cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord_withInt_(self, currentSnackbar_, event);
@@ -207,13 +220,13 @@ withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
   }
 }
 
-- (jboolean)isCurrentWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
+- (bool)isCurrentWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
   @synchronized(lock_) {
     return ADXSnackbarManager_isCurrentSnackbarLockedWithADXSnackbarManager_Callback_(self, callback);
   }
 }
 
-- (jboolean)isCurrentOrNextWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
+- (bool)isCurrentOrNextWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
   @synchronized(lock_) {
     return ADXSnackbarManager_isCurrentSnackbarLockedWithADXSnackbarManager_Callback_(self, callback) || ADXSnackbarManager_isNextSnackbarLockedWithADXSnackbarManager_Callback_(self, callback);
   }
@@ -223,16 +236,16 @@ withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
   ADXSnackbarManager_showNextSnackbarLocked(self);
 }
 
-- (jboolean)cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord:(ADXSnackbarManager_SnackbarRecord *)record
-                                                              withInt:(jint)event {
+- (bool)cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord:(ADXSnackbarManager_SnackbarRecord *)record
+                                                          withInt:(int32_t)event {
   return ADXSnackbarManager_cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord_withInt_(self, record, event);
 }
 
-- (jboolean)isCurrentSnackbarLockedWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
+- (bool)isCurrentSnackbarLockedWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
   return ADXSnackbarManager_isCurrentSnackbarLockedWithADXSnackbarManager_Callback_(self, callback);
 }
 
-- (jboolean)isNextSnackbarLockedWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
+- (bool)isNextSnackbarLockedWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
   return ADXSnackbarManager_isNextSnackbarLockedWithADXSnackbarManager_Callback_(self, callback);
 }
 
@@ -242,7 +255,7 @@ withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
 
 - (void)handleTimeoutWithADXSnackbarManager_SnackbarRecord:(ADXSnackbarManager_SnackbarRecord *)record {
   @synchronized(lock_) {
-    if (currentSnackbar_ == record || nextSnackbar_ == record) {
+    if (JreObjectEqualsEquals(currentSnackbar_, record) || JreObjectEqualsEquals(nextSnackbar_, record)) {
       ADXSnackbarManager_cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord_withInt_(self, record, ADXSnackbar_Callback_DISMISS_EVENT_TIMEOUT);
     }
   }
@@ -348,7 +361,7 @@ void ADXSnackbarManager_showNextSnackbarLocked(ADXSnackbarManager *self) {
   }
 }
 
-jboolean ADXSnackbarManager_cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord_withInt_(ADXSnackbarManager *self, ADXSnackbarManager_SnackbarRecord *record, jint event) {
+bool ADXSnackbarManager_cancelSnackbarLockedWithADXSnackbarManager_SnackbarRecord_withInt_(ADXSnackbarManager *self, ADXSnackbarManager_SnackbarRecord *record, int32_t event) {
   id<ADXSnackbarManager_Callback> callback = [((JavaLangRefWeakReference *) nil_chk(((ADXSnackbarManager_SnackbarRecord *) nil_chk(record))->callback_)) get];
   if (callback != nil) {
     [((ADHandler *) nil_chk(self->handler_)) removeCallbacksAndMessagesWithId:record];
@@ -358,11 +371,11 @@ jboolean ADXSnackbarManager_cancelSnackbarLockedWithADXSnackbarManager_SnackbarR
   return false;
 }
 
-jboolean ADXSnackbarManager_isCurrentSnackbarLockedWithADXSnackbarManager_Callback_(ADXSnackbarManager *self, id<ADXSnackbarManager_Callback> callback) {
+bool ADXSnackbarManager_isCurrentSnackbarLockedWithADXSnackbarManager_Callback_(ADXSnackbarManager *self, id<ADXSnackbarManager_Callback> callback) {
   return self->currentSnackbar_ != nil && [self->currentSnackbar_ isSnackbarWithADXSnackbarManager_Callback:callback];
 }
 
-jboolean ADXSnackbarManager_isNextSnackbarLockedWithADXSnackbarManager_Callback_(ADXSnackbarManager *self, id<ADXSnackbarManager_Callback> callback) {
+bool ADXSnackbarManager_isNextSnackbarLockedWithADXSnackbarManager_Callback_(ADXSnackbarManager *self, id<ADXSnackbarManager_Callback> callback) {
   return self->nextSnackbar_ != nil && [self->nextSnackbar_ isSnackbarWithADXSnackbarManager_Callback:callback];
 }
 
@@ -370,7 +383,7 @@ void ADXSnackbarManager_scheduleTimeoutLockedWithADXSnackbarManager_SnackbarReco
   if (((ADXSnackbarManager_SnackbarRecord *) nil_chk(r))->duration_ == ADXBaseTransientBottomBar_LENGTH_INDEFINITE) {
     return;
   }
-  jint durationMs = ADXSnackbarManager_LONG_DURATION_MS;
+  int32_t durationMs = ADXSnackbarManager_LONG_DURATION_MS;
   if (r->duration_ > 0) {
     durationMs = r->duration_;
   }
@@ -390,7 +403,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ADXSnackbarManager)
   return self;
 }
 
-- (jboolean)handleMessageWithADMessage:(ADMessage *)message {
+- (bool)handleMessageWithADMessage:(ADMessage *)message {
   switch (((ADMessage *) nil_chk(message))->what_) {
     case ADXSnackbarManager_MSG_TIMEOUT:
     [this$0_ handleTimeoutWithADXSnackbarManager_SnackbarRecord:(ADXSnackbarManager_SnackbarRecord *) cast_chk(message->obj_, [ADXSnackbarManager_SnackbarRecord class])];
@@ -420,7 +433,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ADXSnackbarManager)
     { "this$0_", "LADXSnackbarManager;", .constantValue.asLong = 0, 0x1012, -1, -1, -1, -1 },
   };
   static const void *ptrTable[] = { "LADXSnackbarManager;", "handleMessage", "LADMessage;", "initPackagePrivate" };
-  static const J2ObjcClassInfo _ADXSnackbarManager_1 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 2, 1, 0, -1, 3, -1, -1 };
+  static const J2ObjcClassInfo _ADXSnackbarManager_1 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8000, 2, 1, 0, -1, 3, -1, -1 };
   return &_ADXSnackbarManager_1;
 }
 
@@ -463,14 +476,14 @@ J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(ADXSnackbarManager_Callback)
 
 @implementation ADXSnackbarManager_SnackbarRecord
 
-- (instancetype)initWithInt:(jint)duration
+- (instancetype)initWithInt:(int32_t)duration
 withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
   ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(self, duration, callback);
   return self;
 }
 
-- (jboolean)isSnackbarWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
-  return callback != nil && [((JavaLangRefWeakReference *) nil_chk(self->callback_)) get] == callback;
+- (bool)isSnackbarWithADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
+  return callback != nil && JreObjectEqualsEquals([((JavaLangRefWeakReference *) nil_chk(self->callback_)) get], callback);
 }
 
 - (void)dealloc {
@@ -501,17 +514,17 @@ withADXSnackbarManager_Callback:(id<ADXSnackbarManager_Callback>)callback {
 
 @end
 
-void ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(ADXSnackbarManager_SnackbarRecord *self, jint duration, id<ADXSnackbarManager_Callback> callback) {
+void ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(ADXSnackbarManager_SnackbarRecord *self, int32_t duration, id<ADXSnackbarManager_Callback> callback) {
   NSObject_init(self);
   JreStrongAssignAndConsume(&self->callback_, new_JavaLangRefWeakReference_initWithId_(callback));
   self->duration_ = duration;
 }
 
-ADXSnackbarManager_SnackbarRecord *new_ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(jint duration, id<ADXSnackbarManager_Callback> callback) {
+ADXSnackbarManager_SnackbarRecord *new_ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(int32_t duration, id<ADXSnackbarManager_Callback> callback) {
   J2OBJC_NEW_IMPL(ADXSnackbarManager_SnackbarRecord, initWithInt_withADXSnackbarManager_Callback_, duration, callback)
 }
 
-ADXSnackbarManager_SnackbarRecord *create_ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(jint duration, id<ADXSnackbarManager_Callback> callback) {
+ADXSnackbarManager_SnackbarRecord *create_ADXSnackbarManager_SnackbarRecord_initWithInt_withADXSnackbarManager_Callback_(int32_t duration, id<ADXSnackbarManager_Callback> callback) {
   J2OBJC_CREATE_IMPL(ADXSnackbarManager_SnackbarRecord, initWithInt_withADXSnackbarManager_Callback_, duration, callback)
 }
 

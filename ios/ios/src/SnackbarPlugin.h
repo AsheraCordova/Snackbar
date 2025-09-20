@@ -3,6 +3,7 @@
 //  source: D:\Java\git\core-ios-widgets\IOSSnackbarPlugin\src\main\java\com\ashera\snackbar\SnackbarPlugin.java
 //
 
+#import <Foundation/Foundation.h>
 #include "J2ObjC_header.h"
 
 #pragma push_macro("INCLUDE_ALL_SnackbarPlugin")
@@ -39,6 +40,7 @@ FOUNDATION_EXPORT void ASSnackbarPlugin_initPlugin(void);
 J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarPlugin)
 
 @compatibility_alias ComAsheraSnackbarSnackbarPlugin ASSnackbarPlugin;
+
 
 #endif
 

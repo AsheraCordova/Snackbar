@@ -3,6 +3,7 @@
 //  source: D:\Java\git\core-ios-widgets\IOSSnackbarPlugin\src\main\java\com\ashera\snackbar\SnackbarImpl.java
 //
 
+#import <Foundation/Foundation.h>
 #include "J2ObjC_header.h"
 
 #pragma push_macro("INCLUDE_ALL_SnackbarImpl")
@@ -22,6 +23,7 @@
 
 @class ASWidgetAttribute;
 @class IOSClass;
+@class NSString;
 @protocol ASIFragment;
 @protocol ASILifeCycleDecorator;
 @protocol ASIWidget;
@@ -91,6 +93,7 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarImpl)
 
 @compatibility_alias ComAsheraSnackbarSnackbarImpl ASSnackbarImpl;
 
+
 #endif
 
 #if !defined (ASSnackbarImpl_ViewExt_) && (INCLUDE_ALL_SnackbarImpl || defined(INCLUDE_ASSnackbarImpl_ViewExt))
@@ -105,6 +108,7 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarImpl)
 #include "IViewStub.h"
 
 @class ASSnackbarImpl;
+@class NSString;
 
 @interface ASSnackbarImpl_ViewExt : ADView < ASIViewStub >
 
@@ -132,6 +136,7 @@ FOUNDATION_EXPORT ASSnackbarImpl_ViewExt *create_ASSnackbarImpl_ViewExt_initWith
 
 J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarImpl_ViewExt)
 
+
 #endif
 
 #if !defined (ASSnackbarImpl_DallocHandler_) && (INCLUDE_ALL_SnackbarImpl || defined(INCLUDE_ASSnackbarImpl_DallocHandler))
@@ -142,6 +147,7 @@ J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarImpl_ViewExt)
 #include "EventBusHandler.h"
 
 @class ASSnackbarImpl;
+@class NSString;
 
 @interface ASSnackbarImpl_DallocHandler : ASEventBusHandler
 
@@ -169,6 +175,7 @@ FOUNDATION_EXPORT ASSnackbarImpl_DallocHandler *new_ASSnackbarImpl_DallocHandler
 FOUNDATION_EXPORT ASSnackbarImpl_DallocHandler *create_ASSnackbarImpl_DallocHandler_initWithASSnackbarImpl_withNSString_(ASSnackbarImpl *outer$, NSString *type);
 
 J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarImpl_DallocHandler)
+
 
 #endif
 

@@ -3,6 +3,11 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\Snackbar.java
 //
 
+#define J2OBJC_IMPORTED_BY_JAVA_IMPLEMENTATION 1
+
+
+
+
 #include "BaseTransientBottomBar.h"
 #include "Button.h"
 #include "ColorStateList.h"
@@ -21,21 +26,30 @@
 #include "View.h"
 #include "ViewGroup.h"
 #include "ViewParent.h"
+#include "java/lang/Boolean.h"
 #include "java/lang/CharSequence.h"
 #include "java/lang/IllegalArgumentException.h"
+#include "java/lang/Integer.h"
+
+
+@class NSString;
+
+
+#pragma clang diagnostic error "-Wreturn-type"
+#pragma clang diagnostic ignored "-Wswitch"
 
 
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
 
 @interface ADXSnackbar () {
  @public
-  jboolean hasAction_;
+  bool hasAction_;
 }
 
 + (ADXSnackbar *)makeInternalWithADContext:(ADContext *)context
                                 withADView:(ADView *)view
                               withNSString:(NSString *)text
-                                   withInt:(jint)duration;
+                                   withInt:(int32_t)duration;
 
 + (ADViewGroup *)findSuitableParentWithADView:(ADView *)view;
 
@@ -47,7 +61,7 @@
 
 @end
 
-__attribute__((unused)) static ADXSnackbar *ADXSnackbar_makeInternalWithADContext_withADView_withNSString_withInt_(ADContext *context, ADView *view, NSString *text, jint duration);
+__attribute__((unused)) static ADXSnackbar *ADXSnackbar_makeInternalWithADContext_withADView_withNSString_withInt_(ADContext *context, ADView *view, NSString *text, int32_t duration);
 
 __attribute__((unused)) static ADViewGroup *ADXSnackbar_findSuitableParentWithADView_(ADView *view);
 
@@ -78,19 +92,20 @@ __attribute__((unused)) static ADXSnackbar_1 *new_ADXSnackbar_1_initWithADXSnack
 
 __attribute__((unused)) static ADXSnackbar_1 *create_ADXSnackbar_1_initWithADXSnackbar_withADView_OnClickListener_(ADXSnackbar *outer$, id<ADView_OnClickListener> capture$0);
 
+
 @implementation ADXSnackbar
 
 + (ADXSnackbar *)makeWithADContext:(ADContext *)context
                         withADView:(ADView *)view
                       withNSString:(NSString *)text
-                           withInt:(jint)duration {
+                           withInt:(int32_t)duration {
   return ADXSnackbar_makeWithADContext_withADView_withNSString_withInt_(context, view, text, duration);
 }
 
 + (ADXSnackbar *)makeInternalWithADContext:(ADContext *)context
                                 withADView:(ADView *)view
                               withNSString:(NSString *)text
-                                   withInt:(jint)duration {
+                                   withInt:(int32_t)duration {
   return ADXSnackbar_makeInternalWithADContext_withADView_withNSString_withInt_(context, view, text, duration);
 }
 
@@ -130,7 +145,7 @@ __attribute__((unused)) static ADXSnackbar_1 *create_ADXSnackbar_1_initWithADXSn
   return self;
 }
 
-- (ADXSnackbar *)setMaxInlineActionWidthWithInt:(jint)width {
+- (ADXSnackbar *)setMaxInlineActionWidthWithInt:(int32_t)width {
   [((ADXSnackbarContentLayout *) nil_chk(ADXSnackbar_getContentLayout(self))) setMaxInlineActionWidthWithInt:width];
   return self;
 }
@@ -156,7 +171,7 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
 
 + (ADXSnackbar *)makeWithADView:(ADView *)view
                    withNSString:(NSString *)text
-                        withInt:(jint)duration {
+                        withInt:(int32_t)duration {
   return ADXSnackbar_makeWithADView_withNSString_withInt_(view, text, duration);
 }
 
@@ -215,12 +230,12 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
 
 @end
 
-ADXSnackbar *ADXSnackbar_makeWithADContext_withADView_withNSString_withInt_(ADContext *context, ADView *view, NSString *text, jint duration) {
+ADXSnackbar *ADXSnackbar_makeWithADContext_withADView_withNSString_withInt_(ADContext *context, ADView *view, NSString *text, int32_t duration) {
   ADXSnackbar_initialize();
   return ADXSnackbar_makeInternalWithADContext_withADView_withNSString_withInt_(context, view, text, duration);
 }
 
-ADXSnackbar *ADXSnackbar_makeInternalWithADContext_withADView_withNSString_withInt_(ADContext *context, ADView *view, NSString *text, jint duration) {
+ADXSnackbar *ADXSnackbar_makeInternalWithADContext_withADView_withNSString_withInt_(ADContext *context, ADView *view, NSString *text, int32_t duration) {
   ADXSnackbar_initialize();
   ADViewGroup *parent = ADXSnackbar_findSuitableParentWithADView_(view);
   if (parent == nil) {
@@ -288,12 +303,14 @@ ADXSnackbar *create_ADXSnackbar_initWithADContext_withADViewGroup_withADXBaseTra
   J2OBJC_CREATE_IMPL(ADXSnackbar, initWithADContext_withADViewGroup_withADXBaseTransientBottomBar_SnackbarBaseLayout_, context, parent, content)
 }
 
-ADXSnackbar *ADXSnackbar_makeWithADView_withNSString_withInt_(ADView *view, NSString *text, jint duration) {
+ADXSnackbar *ADXSnackbar_makeWithADView_withNSString_withInt_(ADView *view, NSString *text, int32_t duration) {
   ADXSnackbar_initialize();
   return ADXSnackbar_makeInternalWithADContext_withADView_withNSString_withInt_([((ADView *) nil_chk(view)) getContext], view, text, duration);
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ADXSnackbar)
+
+J2OBJC_NAME_MAPPING(ADXSnackbar, "com.google.android.material.snackbar", "ADX")
 
 @implementation ADXSnackbar_Callback
 
@@ -308,7 +325,7 @@ J2OBJC_IGNORE_DESIGNATED_END
 }
 
 - (void)onDismissedWithId:(ADXSnackbar *)transientBottomBar
-                  withInt:(jint)event {
+                  withInt:(int32_t)event {
 }
 
 + (const J2ObjcClassInfo *)__metadata {
@@ -387,7 +404,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ADXSnackbar_Callback)
     { "val$listener_", "LADView_OnClickListener;", .constantValue.asLong = 0, 0x1012, -1, -1, -1, -1 },
   };
   static const void *ptrTable[] = { "LADXSnackbar;LADView_OnClickListener;", "onClick", "LADView;", "LADXSnackbar;", "setActionWithNSString:withADView_OnClickListener:" };
-  static const J2ObjcClassInfo _ADXSnackbar_1 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8010, 2, 2, 3, -1, 4, -1, -1 };
+  static const J2ObjcClassInfo _ADXSnackbar_1 = { "", "com.google.android.material.snackbar", ptrTable, methods, fields, 7, 0x8000, 2, 2, 3, -1, 4, -1, -1 };
   return &_ADXSnackbar_1;
 }
 
@@ -416,12 +433,12 @@ J2OBJC_IGNORE_DESIGNATED_BEGIN
 }
 J2OBJC_IGNORE_DESIGNATED_END
 
-- (void)onMeasureWithInt:(jint)widthMeasureSpec
-                 withInt:(jint)heightMeasureSpec {
+- (void)onMeasureWithInt:(int32_t)widthMeasureSpec
+                 withInt:(int32_t)heightMeasureSpec {
   [super onMeasureWithInt:widthMeasureSpec withInt:heightMeasureSpec];
-  jint childCount = [self getChildCount];
-  jint availableWidth = [self getMeasuredWidth] - [self getPaddingLeft] - [self getPaddingRight];
-  for (jint i = 0; i < childCount; i++) {
+  int32_t childCount = [self getChildCount];
+  int32_t availableWidth = [self getMeasuredWidth] - [self getPaddingLeft] - [self getPaddingRight];
+  for (int32_t i = 0; i < childCount; i++) {
     ADView *child = JreRetainedLocalValue([self getChildAtWithInt:i]);
     if (((ADViewGroup_LayoutParams *) nil_chk([((ADView *) nil_chk(child)) getLayoutParams]))->width_ == ADViewGroup_LayoutParams_MATCH_PARENT) {
       [child measureWithInt:ADView_MeasureSpec_makeMeasureSpecWithInt_withInt_(availableWidth, ADView_MeasureSpec_EXACTLY) withInt:ADView_MeasureSpec_makeMeasureSpecWithInt_withInt_([child getMeasuredHeight], ADView_MeasureSpec_EXACTLY)];

@@ -3,6 +3,7 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\ContentViewCallback.java
 //
 
+#import <Foundation/Foundation.h>
 #include "J2ObjC_header.h"
 
 #pragma push_macro("INCLUDE_ALL_ContentViewCallback")
@@ -16,6 +17,8 @@
 #if !defined (ADXContentViewCallback_) && (INCLUDE_ALL_ContentViewCallback || defined(INCLUDE_ADXContentViewCallback))
 #define ADXContentViewCallback_
 
+@class JavaLangInteger;
+
 /*!
  @brief Interface that defines the behavior of the main content of a transient bottom bar.
  */
@@ -26,16 +29,16 @@
  @param delay Animation delay.
  @param duration Animation duration.
  */
-- (void)animateContentInWithInt:(jint)delay
-                        withInt:(jint)duration;
+- (void)animateContentInWithInt:(int32_t)delay
+                        withInt:(int32_t)duration;
 
 /*!
  @brief Animates the content of the transient bottom bar out.
  @param delay Animation delay.
  @param duration Animation duration.
  */
-- (void)animateContentOutWithInt:(jint)delay
-                         withInt:(jint)duration;
+- (void)animateContentOutWithInt:(int32_t)delay
+                         withInt:(int32_t)duration;
 
 @end
 
@@ -44,6 +47,7 @@ J2OBJC_EMPTY_STATIC_INIT(ADXContentViewCallback)
 J2OBJC_TYPE_LITERAL_HEADER(ADXContentViewCallback)
 
 #define ComGoogleAndroidMaterialSnackbarContentViewCallback ADXContentViewCallback
+
 
 #endif
 

@@ -3,6 +3,11 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\SnackbarContentLayout.java
 //
 
+#define J2OBJC_IMPORTED_BY_JAVA_IMPLEMENTATION 1
+
+
+
+
 #include "BaseTransientBottomBar.h"
 #include "Button.h"
 #include "IOSPrimitiveArray.h"
@@ -15,33 +20,42 @@
 #include "TimeInterpolator.h"
 #include "View.h"
 #include "ViewCompat.h"
+#include "java/lang/Boolean.h"
+#include "java/lang/Float.h"
+#include "java/lang/Integer.h"
+
+
+
+
+#pragma clang diagnostic error "-Wreturn-type"
+#pragma clang diagnostic ignored "-Wswitch"
 
 
 @interface ADXSnackbarContentLayout () {
  @public
   id<ADTimeInterpolator> contentInterpolator_;
-  jint maxInlineActionWidth_;
+  int32_t maxInlineActionWidth_;
 }
 
-- (jboolean)updateViewsWithinLayoutWithInt:(jint)orientation
-                                   withInt:(jint)messagePadTop
-                                   withInt:(jint)messagePadBottom;
+- (bool)updateViewsWithinLayoutWithInt:(int32_t)orientation
+                               withInt:(int32_t)messagePadTop
+                               withInt:(int32_t)messagePadBottom;
 
 + (void)updateTopBottomPaddingWithADView:(ADView *)view
-                                 withInt:(jint)topPadding
-                                 withInt:(jint)bottomPadding;
+                                 withInt:(int32_t)topPadding
+                                 withInt:(int32_t)bottomPadding;
 
-- (jint)getNoOfLines;
+- (int32_t)getNoOfLines;
 
 @end
 
 J2OBJC_FIELD_SETTER(ADXSnackbarContentLayout, contentInterpolator_, id<ADTimeInterpolator>)
 
-__attribute__((unused)) static jboolean ADXSnackbarContentLayout_updateViewsWithinLayoutWithInt_withInt_withInt_(ADXSnackbarContentLayout *self, jint orientation, jint messagePadTop, jint messagePadBottom);
+__attribute__((unused)) static bool ADXSnackbarContentLayout_updateViewsWithinLayoutWithInt_withInt_withInt_(ADXSnackbarContentLayout *self, int32_t orientation, int32_t messagePadTop, int32_t messagePadBottom);
 
-__attribute__((unused)) static void ADXSnackbarContentLayout_updateTopBottomPaddingWithADView_withInt_withInt_(ADView *view, jint topPadding, jint bottomPadding);
+__attribute__((unused)) static void ADXSnackbarContentLayout_updateTopBottomPaddingWithADView_withInt_withInt_(ADView *view, int32_t topPadding, int32_t bottomPadding);
 
-__attribute__((unused)) static jint ADXSnackbarContentLayout_getNoOfLines(ADXSnackbarContentLayout *self);
+__attribute__((unused)) static int32_t ADXSnackbarContentLayout_getNoOfLines(ADXSnackbarContentLayout *self);
 
 @implementation ADXSnackbarContentLayout
 
@@ -52,23 +66,23 @@ J2OBJC_IGNORE_DESIGNATED_BEGIN
 }
 J2OBJC_IGNORE_DESIGNATED_END
 
-- (void)onMeasureWithInt:(jint)widthMeasureSpec
-                 withInt:(jint)heightMeasureSpec {
+- (void)onMeasureWithInt:(int32_t)widthMeasureSpec
+                 withInt:(int32_t)heightMeasureSpec {
   [super onMeasureWithInt:widthMeasureSpec withInt:heightMeasureSpec];
   if ([self getOrientation] == ADLinearLayout_VERTICAL) {
     return;
   }
-  jint multiLineVPadding = JreFpToInt(ASPluginInvoker_convertDpToPixelWithNSString_(@"24dp"));
-  jint singleLineVPadding = JreFpToInt(ASPluginInvoker_convertDpToPixelWithNSString_(@"14dp"));
-  jboolean isMultiLine = ADXSnackbarContentLayout_getNoOfLines(self) > 1;
-  jboolean remeasure = false;
+  int32_t multiLineVPadding = JreFpToInt(ASPluginInvoker_convertDpToPixelWithNSString_(@"24dp"));
+  int32_t singleLineVPadding = JreFpToInt(ASPluginInvoker_convertDpToPixelWithNSString_(@"14dp"));
+  bool isMultiLine = ADXSnackbarContentLayout_getNoOfLines(self) > 1;
+  bool remeasure = false;
   if (isMultiLine && maxInlineActionWidth_ > 0 && [((ADButton *) nil_chk([self getActionView])) getMeasuredWidth] > maxInlineActionWidth_) {
     if (ADXSnackbarContentLayout_updateViewsWithinLayoutWithInt_withInt_withInt_(self, ADLinearLayout_VERTICAL, multiLineVPadding, multiLineVPadding - singleLineVPadding)) {
       remeasure = true;
     }
   }
   else {
-    jint messagePadding = isMultiLine ? multiLineVPadding : singleLineVPadding;
+    int32_t messagePadding = isMultiLine ? multiLineVPadding : singleLineVPadding;
     if (ADXSnackbarContentLayout_updateViewsWithinLayoutWithInt_withInt_withInt_(self, ADLinearLayout_HORIZONTAL, messagePadding, messagePadding)) {
       remeasure = true;
     }
@@ -78,27 +92,27 @@ J2OBJC_IGNORE_DESIGNATED_END
   }
 }
 
-- (jboolean)updateViewsWithinLayoutWithInt:(jint)orientation
-                                   withInt:(jint)messagePadTop
-                                   withInt:(jint)messagePadBottom {
+- (bool)updateViewsWithinLayoutWithInt:(int32_t)orientation
+                               withInt:(int32_t)messagePadTop
+                               withInt:(int32_t)messagePadBottom {
   return ADXSnackbarContentLayout_updateViewsWithinLayoutWithInt_withInt_withInt_(self, orientation, messagePadTop, messagePadBottom);
 }
 
 + (void)updateTopBottomPaddingWithADView:(ADView *)view
-                                 withInt:(jint)topPadding
-                                 withInt:(jint)bottomPadding {
+                                 withInt:(int32_t)topPadding
+                                 withInt:(int32_t)bottomPadding {
   ADXSnackbarContentLayout_updateTopBottomPaddingWithADView_withInt_withInt_(view, topPadding, bottomPadding);
 }
 
-- (void)animateContentInWithInt:(jint)delay
-                        withInt:(jint)duration {
-  ADObjectAnimator *o = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getMessageView], @"alpha", [IOSFloatArray arrayWithFloats:(jfloat[]){ 0.0f, 1.0f } count:2]);
+- (void)animateContentInWithInt:(int32_t)delay
+                        withInt:(int32_t)duration {
+  ADObjectAnimator *o = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getMessageView], @"alpha", [IOSFloatArray arrayWithFloats:(float[]){ 0.0f, 1.0f } count:2]);
   [((ADObjectAnimator *) nil_chk(o)) setDurationWithLong:duration];
   [o setInterpolatorWithADTimeInterpolator:contentInterpolator_];
   [o setStartDelayWithLong:delay];
   [o start];
   if ([((ADButton *) nil_chk([self getActionView])) getVisibility] == ADView_VISIBLE) {
-    ADObjectAnimator *o1 = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getActionView], @"alpha", [IOSFloatArray arrayWithFloats:(jfloat[]){ 0.0f, 1.0f } count:2]);
+    ADObjectAnimator *o1 = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getActionView], @"alpha", [IOSFloatArray arrayWithFloats:(float[]){ 0.0f, 1.0f } count:2]);
     [((ADObjectAnimator *) nil_chk(o1)) setDurationWithLong:duration];
     [o setInterpolatorWithADTimeInterpolator:contentInterpolator_];
     [o1 setStartDelayWithLong:delay];
@@ -106,15 +120,15 @@ J2OBJC_IGNORE_DESIGNATED_END
   }
 }
 
-- (void)animateContentOutWithInt:(jint)delay
-                         withInt:(jint)duration {
-  ADObjectAnimator *o = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getMessageView], @"alpha", [IOSFloatArray arrayWithFloats:(jfloat[]){ 1.0f, 0.0f } count:2]);
+- (void)animateContentOutWithInt:(int32_t)delay
+                         withInt:(int32_t)duration {
+  ADObjectAnimator *o = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getMessageView], @"alpha", [IOSFloatArray arrayWithFloats:(float[]){ 1.0f, 0.0f } count:2]);
   [((ADObjectAnimator *) nil_chk(o)) setDurationWithLong:duration];
   [o setInterpolatorWithADTimeInterpolator:contentInterpolator_];
   [o setStartDelayWithLong:delay];
   [o start];
   if ([((ADButton *) nil_chk([self getActionView])) getVisibility] == ADView_VISIBLE) {
-    ADObjectAnimator *o1 = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getActionView], @"alpha", [IOSFloatArray arrayWithFloats:(jfloat[]){ 1.0f, 0.0f } count:2]);
+    ADObjectAnimator *o1 = ADObjectAnimator_ofFloatWithId_withNSString_withFloatArray_([self getActionView], @"alpha", [IOSFloatArray arrayWithFloats:(float[]){ 1.0f, 0.0f } count:2]);
     [((ADObjectAnimator *) nil_chk(o1)) setDurationWithLong:duration];
     [o setInterpolatorWithADTimeInterpolator:contentInterpolator_];
     [o1 setStartDelayWithLong:delay];
@@ -122,7 +136,7 @@ J2OBJC_IGNORE_DESIGNATED_END
   }
 }
 
-- (void)setMaxInlineActionWidthWithInt:(jint)width {
+- (void)setMaxInlineActionWidthWithInt:(int32_t)width {
   maxInlineActionWidth_ = width;
 }
 
@@ -134,7 +148,7 @@ J2OBJC_IGNORE_DESIGNATED_END
   return (ADButton *) cast_chk([self getChildAtWithInt:1], [ADButton class]);
 }
 
-- (jint)getNoOfLines {
+- (int32_t)getNoOfLines {
   return ADXSnackbarContentLayout_getNoOfLines(self);
 }
 
@@ -194,8 +208,8 @@ ADXSnackbarContentLayout *create_ADXSnackbarContentLayout_init() {
   J2OBJC_CREATE_IMPL(ADXSnackbarContentLayout, init)
 }
 
-jboolean ADXSnackbarContentLayout_updateViewsWithinLayoutWithInt_withInt_withInt_(ADXSnackbarContentLayout *self, jint orientation, jint messagePadTop, jint messagePadBottom) {
-  jboolean changed = false;
+bool ADXSnackbarContentLayout_updateViewsWithinLayoutWithInt_withInt_withInt_(ADXSnackbarContentLayout *self, int32_t orientation, int32_t messagePadTop, int32_t messagePadBottom) {
+  bool changed = false;
   if (orientation != [self getOrientation]) {
     [self setOrientationWithInt:orientation];
     changed = true;
@@ -207,7 +221,7 @@ jboolean ADXSnackbarContentLayout_updateViewsWithinLayoutWithInt_withInt_withInt
   return changed;
 }
 
-void ADXSnackbarContentLayout_updateTopBottomPaddingWithADView_withInt_withInt_(ADView *view, jint topPadding, jint bottomPadding) {
+void ADXSnackbarContentLayout_updateTopBottomPaddingWithADView_withInt_withInt_(ADView *view, int32_t topPadding, int32_t bottomPadding) {
   ADXSnackbarContentLayout_initialize();
   if (ADXViewCompat_isPaddingRelativeWithADView_(view)) {
     ADXViewCompat_setPaddingRelativeWithADView_withInt_withInt_withInt_withInt_(view, ADXViewCompat_getPaddingStartWithADView_(view), topPadding, ADXViewCompat_getPaddingEndWithADView_(view), bottomPadding);
@@ -217,7 +231,7 @@ void ADXSnackbarContentLayout_updateTopBottomPaddingWithADView_withInt_withInt_(
   }
 }
 
-jint ADXSnackbarContentLayout_getNoOfLines(ADXSnackbarContentLayout *self) {
+int32_t ADXSnackbarContentLayout_getNoOfLines(ADXSnackbarContentLayout *self) {
   if ([((ADTextView *) nil_chk([self getMessageView])) getLineHeight] == 0) {
     return 0;
   }
@@ -225,3 +239,5 @@ jint ADXSnackbarContentLayout_getNoOfLines(ADXSnackbarContentLayout *self) {
 }
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ADXSnackbarContentLayout)
+
+J2OBJC_NAME_MAPPING(ADXSnackbarContentLayout, "com.google.android.material.snackbar", "ADX")

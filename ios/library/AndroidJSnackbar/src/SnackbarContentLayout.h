@@ -3,6 +3,7 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\SnackbarContentLayout.java
 //
 
+#import <Foundation/Foundation.h>
 #include "J2ObjC_header.h"
 
 #pragma push_macro("INCLUDE_ALL_SnackbarContentLayout")
@@ -27,6 +28,7 @@
 @class ADButton;
 @class ADContext;
 @class ADTextView;
+@class JavaLangInteger;
 
 @interface ADXSnackbarContentLayout : ADLinearLayout < ADXContentViewCallback >
 
@@ -34,22 +36,22 @@
 
 - (instancetype)init;
 
-- (void)animateContentInWithInt:(jint)delay
-                        withInt:(jint)duration;
+- (void)animateContentInWithInt:(int32_t)delay
+                        withInt:(int32_t)duration;
 
-- (void)animateContentOutWithInt:(jint)delay
-                         withInt:(jint)duration;
+- (void)animateContentOutWithInt:(int32_t)delay
+                         withInt:(int32_t)duration;
 
 - (ADButton *)getActionView;
 
 - (ADTextView *)getMessageView;
 
-- (void)setMaxInlineActionWidthWithInt:(jint)width;
+- (void)setMaxInlineActionWidthWithInt:(int32_t)width;
 
 #pragma mark Protected
 
-- (void)onMeasureWithInt:(jint)widthMeasureSpec
-                 withInt:(jint)heightMeasureSpec;
+- (void)onMeasureWithInt:(int32_t)widthMeasureSpec
+                 withInt:(int32_t)heightMeasureSpec;
 
 // Disallowed inherited constructors, do not use.
 
@@ -68,6 +70,7 @@ FOUNDATION_EXPORT ADXSnackbarContentLayout *create_ADXSnackbarContentLayout_init
 J2OBJC_TYPE_LITERAL_HEADER(ADXSnackbarContentLayout)
 
 @compatibility_alias ComGoogleAndroidMaterialSnackbarSnackbarContentLayout ADXSnackbarContentLayout;
+
 
 #endif
 

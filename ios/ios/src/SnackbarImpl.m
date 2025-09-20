@@ -3,6 +3,11 @@
 //  source: D:\Java\git\core-ios-widgets\IOSSnackbarPlugin\src\main\java\com\ashera\snackbar\SnackbarImpl.java
 //
 
+#define J2OBJC_IMPORTED_BY_JAVA_IMPLEMENTATION 1
+
+
+
+
 #include "BaseTransientBottomBar.h"
 #include "BaseWidget.h"
 #include "ColorStateList.h"
@@ -37,19 +42,24 @@
 #include <UIKit/UIKit.h>
 #include "ASUIView.h"
 
-@protocol JavaUtilMap;
+
+@class NSString;
+
+
+#pragma clang diagnostic error "-Wreturn-type"
+#pragma clang diagnostic ignored "-Wswitch"
 
 
 @interface ASSnackbarImpl () {
  @public
   ADView *viewStub_;
-  jint duration_;
+  int32_t duration_;
   ADXSnackbar *snackbar_;
   NSString *text_;
   NSString *onClickAction_;
   NSString *actionText_;
   ADColorStateList *textColor_;
-  jint maxInlineActionWidth_;
+  int32_t maxInlineActionWidth_;
   ADColorStateList *actionTextColor_;
   ADDrawable *background_;
 }
@@ -172,9 +182,10 @@ __attribute__((unused)) static ASSnackbarImpl_OnClickListener *create_ASSnackbar
 
 J2OBJC_TYPE_LITERAL_HEADER(ASSnackbarImpl_OnClickListener)
 
+
 @interface ASSnackbarImpl_DallocHandler () {
  @public
-  __unsafe_unretained ASSnackbarImpl *this$0_;
+  WEAK_ ASSnackbarImpl *this$0_;
 }
 
 @end
@@ -527,6 +538,8 @@ void ASSnackbarImpl_setBackgroundAttributes(ASSnackbarImpl *self) {
 
 J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarImpl)
 
+J2OBJC_NAME_MAPPING(ASSnackbarImpl, "com.ashera.snackbar", "AS")
+
 @implementation ASSnackbarImpl_ViewExt
 
 - (instancetype)initWithASSnackbarImpl:(ASSnackbarImpl *)outer$ {
@@ -633,7 +646,7 @@ J2OBJC_CLASS_TYPE_LITERAL_SOURCE(ASSnackbarImpl_ViewExt)
     if ([((id<ASIWidget>) nil_chk(w_)) getModelUiToPojoEventIds] != nil) {
       ASViewImpl_refreshUiFromModelWithASIWidget_withId_withBoolean_(w_, [((id<ASIWidget>) nil_chk(w_)) getModelUiToPojoEventIds], true);
     }
-    if (strValue_ != nil && ![strValue_ java_isEmpty] && ![((NSString *) nil_chk([((NSString *) nil_chk(strValue_)) java_trim])) java_hasPrefix:@"+"]) {
+    if (strValue_ != nil && ![strValue_ isEmpty] && ![((NSString *) nil_chk([((NSString *) nil_chk(strValue_)) java_trim])) java_hasPrefix:@"+"]) {
       id<ASIActivity> activity = [((id<ASIFragment>) nil_chk([((id<ASIWidget>) nil_chk(w_)) getFragment])) getRootActivity];
       if (activity != nil) {
         [activity sendEventMessageWithJavaUtilMap:obj];

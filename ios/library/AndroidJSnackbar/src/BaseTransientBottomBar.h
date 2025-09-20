@@ -3,6 +3,7 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\BaseTransientBottomBar.java
 //
 
+#import <Foundation/Foundation.h>
 #include "J2ObjC_header.h"
 
 #pragma push_macro("INCLUDE_ALL_BaseTransientBottomBar")
@@ -25,6 +26,8 @@
 @class ADViewGroup;
 @class ADXBaseTransientBottomBar_SnackbarBaseLayout;
 @class ADXBaseTransientBottomBar_SwipeDismissBehavior;
+@class JavaLangBoolean;
+@class JavaLangInteger;
 @protocol ADTimeInterpolator;
 @protocol ADXSnackbarManager_Callback;
 
@@ -40,15 +43,15 @@
 
 - (ADView *)getAnchorView;
 
-- (jint)getAnimationMode;
+- (int32_t)getAnimationMode;
 
-- (jint)getDuration;
+- (int32_t)getDuration;
 
-- (jint)getScreenHeight;
+- (int32_t)getScreenHeight;
 
-- (ADXBaseTransientBottomBar *)setAnimationModeWithInt:(jint)animationMode;
+- (ADXBaseTransientBottomBar *)setAnimationModeWithInt:(int32_t)animationMode;
 
-- (ADXBaseTransientBottomBar *)setDurationWithInt:(jint)duration;
+- (ADXBaseTransientBottomBar *)setDurationWithInt:(int32_t)duration;
 
 - (void)show;
 
@@ -58,7 +61,7 @@
                   withADViewGroup:(ADViewGroup *)parent
 withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_SnackbarBaseLayout *)view;
 
-- (void)dispatchDismissWithInt:(jint)event;
+- (void)dispatchDismissWithInt:(int32_t)event;
 
 - (ADXBaseTransientBottomBar_SwipeDismissBehavior *)getNewBehavior;
 
@@ -66,9 +69,9 @@ withADXBaseTransientBottomBar_SnackbarBaseLayout:(ADXBaseTransientBottomBar_Snac
 
 - (void)animateViewIn;
 
-- (void)hideViewWithInt:(jint)event;
+- (void)hideViewWithInt:(int32_t)event;
 
-- (jboolean)shouldAnimate;
+- (bool)shouldAnimate;
 
 - (void)showView;
 
@@ -83,46 +86,46 @@ J2OBJC_STATIC_INIT(ADXBaseTransientBottomBar)
 J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, view_, ADXBaseTransientBottomBar_SnackbarBaseLayout *)
 J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar, managerCallback_, id<ADXSnackbarManager_Callback>)
 
-inline jint ADXBaseTransientBottomBar_get_ANIMATION_MODE_SLIDE(void);
+inline int32_t ADXBaseTransientBottomBar_get_ANIMATION_MODE_SLIDE(void);
 #define ADXBaseTransientBottomBar_ANIMATION_MODE_SLIDE 0
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, ANIMATION_MODE_SLIDE, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, ANIMATION_MODE_SLIDE, int32_t)
 
-inline jint ADXBaseTransientBottomBar_get_ANIMATION_MODE_FADE(void);
+inline int32_t ADXBaseTransientBottomBar_get_ANIMATION_MODE_FADE(void);
 #define ADXBaseTransientBottomBar_ANIMATION_MODE_FADE 1
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, ANIMATION_MODE_FADE, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, ANIMATION_MODE_FADE, int32_t)
 
-inline jint ADXBaseTransientBottomBar_get_LENGTH_INDEFINITE(void);
+inline int32_t ADXBaseTransientBottomBar_get_LENGTH_INDEFINITE(void);
 #define ADXBaseTransientBottomBar_LENGTH_INDEFINITE -2
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, LENGTH_INDEFINITE, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, LENGTH_INDEFINITE, int32_t)
 
-inline jint ADXBaseTransientBottomBar_get_LENGTH_SHORT(void);
+inline int32_t ADXBaseTransientBottomBar_get_LENGTH_SHORT(void);
 #define ADXBaseTransientBottomBar_LENGTH_SHORT -1
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, LENGTH_SHORT, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, LENGTH_SHORT, int32_t)
 
-inline jint ADXBaseTransientBottomBar_get_LENGTH_LONG(void);
+inline int32_t ADXBaseTransientBottomBar_get_LENGTH_LONG(void);
 #define ADXBaseTransientBottomBar_LENGTH_LONG 0
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, LENGTH_LONG, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, LENGTH_LONG, int32_t)
 
-inline jint ADXBaseTransientBottomBar_get_DEFAULT_SLIDE_ANIMATION_DURATION(void);
+inline int32_t ADXBaseTransientBottomBar_get_DEFAULT_SLIDE_ANIMATION_DURATION(void);
 #define ADXBaseTransientBottomBar_DEFAULT_SLIDE_ANIMATION_DURATION 250
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, DEFAULT_SLIDE_ANIMATION_DURATION, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, DEFAULT_SLIDE_ANIMATION_DURATION, int32_t)
 
-inline jint ADXBaseTransientBottomBar_get_DEFAULT_ANIMATION_FADE_DURATION(void);
+inline int32_t ADXBaseTransientBottomBar_get_DEFAULT_ANIMATION_FADE_DURATION(void);
 #define ADXBaseTransientBottomBar_DEFAULT_ANIMATION_FADE_DURATION 180
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, DEFAULT_ANIMATION_FADE_DURATION, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, DEFAULT_ANIMATION_FADE_DURATION, int32_t)
 
 inline ADHandler *ADXBaseTransientBottomBar_get_handler(void);
 /*! INTERNAL ONLY - Use accessor function from above. */
 FOUNDATION_EXPORT ADHandler *ADXBaseTransientBottomBar_handler;
 J2OBJC_STATIC_FIELD_OBJ_FINAL(ADXBaseTransientBottomBar, handler, ADHandler *)
 
-inline jint ADXBaseTransientBottomBar_get_MSG_SHOW(void);
+inline int32_t ADXBaseTransientBottomBar_get_MSG_SHOW(void);
 #define ADXBaseTransientBottomBar_MSG_SHOW 0
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, MSG_SHOW, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, MSG_SHOW, int32_t)
 
-inline jint ADXBaseTransientBottomBar_get_MSG_DISMISS(void);
+inline int32_t ADXBaseTransientBottomBar_get_MSG_DISMISS(void);
 #define ADXBaseTransientBottomBar_MSG_DISMISS 1
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, MSG_DISMISS, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar, MSG_DISMISS, int32_t)
 
 inline id<ADTimeInterpolator> ADXBaseTransientBottomBar_get_LINEAR_INTERPOLATOR(void);
 /*! INTERNAL ONLY - Use accessor function from above. */
@@ -155,10 +158,13 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar)
 
 @compatibility_alias ComGoogleAndroidMaterialSnackbarBaseTransientBottomBar ADXBaseTransientBottomBar;
 
+
 #endif
 
 #if !defined (ADXBaseTransientBottomBar_BaseCallback_) && (INCLUDE_ALL_BaseTransientBottomBar || defined(INCLUDE_ADXBaseTransientBottomBar_BaseCallback))
 #define ADXBaseTransientBottomBar_BaseCallback_
+
+@class JavaLangInteger;
 
 @interface ADXBaseTransientBottomBar_BaseCallback : NSObject
 
@@ -167,7 +173,7 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar)
 - (instancetype)init;
 
 - (void)onDismissedWithId:(id)transientBottomBar
-                  withInt:(jint)event;
+                  withInt:(int32_t)event;
 
 - (void)onShownWithId:(id)transientBottomBar;
 
@@ -175,29 +181,30 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar)
 
 J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_BaseCallback)
 
-inline jint ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_SWIPE(void);
+inline int32_t ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_SWIPE(void);
 #define ADXBaseTransientBottomBar_BaseCallback_DISMISS_EVENT_SWIPE 0
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_SWIPE, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_SWIPE, int32_t)
 
-inline jint ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_ACTION(void);
+inline int32_t ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_ACTION(void);
 #define ADXBaseTransientBottomBar_BaseCallback_DISMISS_EVENT_ACTION 1
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_ACTION, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_ACTION, int32_t)
 
-inline jint ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_TIMEOUT(void);
+inline int32_t ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_TIMEOUT(void);
 #define ADXBaseTransientBottomBar_BaseCallback_DISMISS_EVENT_TIMEOUT 2
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_TIMEOUT, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_TIMEOUT, int32_t)
 
-inline jint ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_MANUAL(void);
+inline int32_t ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_MANUAL(void);
 #define ADXBaseTransientBottomBar_BaseCallback_DISMISS_EVENT_MANUAL 3
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_MANUAL, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_MANUAL, int32_t)
 
-inline jint ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_CONSECUTIVE(void);
+inline int32_t ADXBaseTransientBottomBar_BaseCallback_get_DISMISS_EVENT_CONSECUTIVE(void);
 #define ADXBaseTransientBottomBar_BaseCallback_DISMISS_EVENT_CONSECUTIVE 4
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_CONSECUTIVE, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_BaseCallback, DISMISS_EVENT_CONSECUTIVE, int32_t)
 
 FOUNDATION_EXPORT void ADXBaseTransientBottomBar_BaseCallback_init(ADXBaseTransientBottomBar_BaseCallback *self);
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_BaseCallback)
+
 
 #endif
 
@@ -216,6 +223,7 @@ J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_SwipeDismissBehavior_OnDismis
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_SwipeDismissBehavior_OnDismissListener)
 
+
 #endif
 
 #if !defined (ADXBaseTransientBottomBar_SnackbarBaseLayout_) && (INCLUDE_ALL_BaseTransientBottomBar || defined(INCLUDE_ADXBaseTransientBottomBar_SnackbarBaseLayout))
@@ -226,6 +234,7 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_SwipeDismissBehavior_OnDism
 #include "FrameLayout.h"
 
 @class ADViewGroup;
+@class JavaLangInteger;
 
 @interface ADXBaseTransientBottomBar_SnackbarBaseLayout : ADFrameLayout
 
@@ -233,16 +242,16 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_SwipeDismissBehavior_OnDism
 
 - (instancetype)init;
 
-- (void)onMeasureWithInt:(jint)widthMeasureSpec
-                 withInt:(jint)heightMeasureSpec;
+- (void)onMeasureWithInt:(int32_t)widthMeasureSpec
+                 withInt:(int32_t)heightMeasureSpec;
 
 #pragma mark Package-Private
 
 - (void)addToTargetParentWithADViewGroup:(ADViewGroup *)targetParent;
 
-- (jint)getAnimationMode;
+- (int32_t)getAnimationMode;
 
-- (void)setAnimationModeWithInt:(jint)animationMode;
+- (void)setAnimationModeWithInt:(int32_t)animationMode;
 
 @end
 
@@ -255,6 +264,7 @@ FOUNDATION_EXPORT ADXBaseTransientBottomBar_SnackbarBaseLayout *new_ADXBaseTrans
 FOUNDATION_EXPORT ADXBaseTransientBottomBar_SnackbarBaseLayout *create_ADXBaseTransientBottomBar_SnackbarBaseLayout_init(void);
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_SnackbarBaseLayout)
+
 
 #endif
 
@@ -279,6 +289,7 @@ J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_Anchor)
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_Anchor)
 
+
 #endif
 
 #if !defined (ADXBaseTransientBottomBar_SwipeDismissBehavior_) && (INCLUDE_ALL_BaseTransientBottomBar || defined(INCLUDE_ADXBaseTransientBottomBar_SwipeDismissBehavior))
@@ -288,6 +299,7 @@ J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_Anchor)
 #define INCLUDE_ADXCoordinatorLayout_Behavior 1
 #include "CoordinatorLayout.h"
 
+@class JavaLangInteger;
 @protocol ADXBaseTransientBottomBar_SwipeDismissBehavior_OnDismissListener;
 
 @interface ADXBaseTransientBottomBar_SwipeDismissBehavior : ADXCoordinatorLayout_Behavior {
@@ -309,17 +321,17 @@ J2OBJC_EMPTY_STATIC_INIT(ADXBaseTransientBottomBar_SwipeDismissBehavior)
 
 J2OBJC_FIELD_SETTER(ADXBaseTransientBottomBar_SwipeDismissBehavior, onDismissListener_, id<ADXBaseTransientBottomBar_SwipeDismissBehavior_OnDismissListener>)
 
-inline jint ADXBaseTransientBottomBar_SwipeDismissBehavior_get_STATE_IDLE(void);
+inline int32_t ADXBaseTransientBottomBar_SwipeDismissBehavior_get_STATE_IDLE(void);
 #define ADXBaseTransientBottomBar_SwipeDismissBehavior_STATE_IDLE 0
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_SwipeDismissBehavior, STATE_IDLE, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_SwipeDismissBehavior, STATE_IDLE, int32_t)
 
-inline jint ADXBaseTransientBottomBar_SwipeDismissBehavior_get_STATE_SETTLING(void);
+inline int32_t ADXBaseTransientBottomBar_SwipeDismissBehavior_get_STATE_SETTLING(void);
 #define ADXBaseTransientBottomBar_SwipeDismissBehavior_STATE_SETTLING 1
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_SwipeDismissBehavior, STATE_SETTLING, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_SwipeDismissBehavior, STATE_SETTLING, int32_t)
 
-inline jint ADXBaseTransientBottomBar_SwipeDismissBehavior_get_STATE_DRAGGING(void);
+inline int32_t ADXBaseTransientBottomBar_SwipeDismissBehavior_get_STATE_DRAGGING(void);
 #define ADXBaseTransientBottomBar_SwipeDismissBehavior_STATE_DRAGGING 2
-J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_SwipeDismissBehavior, STATE_DRAGGING, jint)
+J2OBJC_STATIC_FIELD_CONSTANT(ADXBaseTransientBottomBar_SwipeDismissBehavior, STATE_DRAGGING, int32_t)
 
 FOUNDATION_EXPORT void ADXBaseTransientBottomBar_SwipeDismissBehavior_init(ADXBaseTransientBottomBar_SwipeDismissBehavior *self);
 
@@ -328,6 +340,7 @@ FOUNDATION_EXPORT ADXBaseTransientBottomBar_SwipeDismissBehavior *new_ADXBaseTra
 FOUNDATION_EXPORT ADXBaseTransientBottomBar_SwipeDismissBehavior *create_ADXBaseTransientBottomBar_SwipeDismissBehavior_init(void);
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_SwipeDismissBehavior)
+
 
 #endif
 
@@ -361,6 +374,7 @@ FOUNDATION_EXPORT ADXBaseTransientBottomBar_Behavior *new_ADXBaseTransientBottom
 FOUNDATION_EXPORT ADXBaseTransientBottomBar_Behavior *create_ADXBaseTransientBottomBar_Behavior_initWithADXBaseTransientBottomBar_(ADXBaseTransientBottomBar *outer$);
 
 J2OBJC_TYPE_LITERAL_HEADER(ADXBaseTransientBottomBar_Behavior)
+
 
 #endif
 

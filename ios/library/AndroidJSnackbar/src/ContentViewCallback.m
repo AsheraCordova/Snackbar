@@ -3,8 +3,19 @@
 //  source: D:\Java\git\core-javafx-widget\AndroidJSnackbar\src\main\java\com\google\android\material\snackbar\ContentViewCallback.java
 //
 
+#define J2OBJC_IMPORTED_BY_JAVA_IMPLEMENTATION 1
+
+
+
+
 #include "ContentViewCallback.h"
 #include "J2ObjC_source.h"
+
+
+
+
+#pragma clang diagnostic error "-Wreturn-type"
+#pragma clang diagnostic ignored "-Wswitch"
 
 
 @interface ADXContentViewCallback : NSObject
@@ -32,3 +43,5 @@
 @end
 
 J2OBJC_INTERFACE_TYPE_LITERAL_SOURCE(ADXContentViewCallback)
+
+J2OBJC_NAME_MAPPING(ADXContentViewCallback, "com.google.android.material.snackbar", "ADX")
